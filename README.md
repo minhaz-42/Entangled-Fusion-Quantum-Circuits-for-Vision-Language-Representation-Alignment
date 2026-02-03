@@ -1,0 +1,2 @@
+# Entangled-Fusion-Quantum-Circuits-for-Vision-Language-Representation-Alignment
+Q-FuseVision is an experimental web platform where users upload images and natural‑language queries; the system runs advanced vision analysis (object detection, depth estimation, anomaly detection), performs a quantum‑inspired fusion of visual + language features, and reasons with LLM-based models to produce rich, interactive results.
