@@ -1,0 +1,1145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Q-FuseVision AI Lab | Quantum-Enhanced Vision Intelligence</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Exo+2:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --primary: #00f0ff;
+            --secondary: #bf00ff;
+            --accent: #ff00aa;
+            --success: #00ff88;
+            --warning: #ffaa00;
+            --danger: #ff3366;
+            --dark-bg: #0a0a1a;
+            --darker-bg: #050510;
+            --card-bg: rgba(20, 20, 40, 0.8);
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --border-glow: rgba(0, 240, 255, 0.3);
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.7);
+            --text-muted: rgba(255, 255, 255, 0.4);
+            --gradient-primary: linear-gradient(135deg, #00f0ff 0%, #bf00ff 50%, #ff00aa 100%);
+            --gradient-dark: linear-gradient(180deg, #0a0a1a 0%, #050510 100%);
+            --glow-primary: 0 0 30px rgba(0, 240, 255, 0.4);
+            --glow-secondary: 0 0 30px rgba(191, 0, 255, 0.4);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        
+        body {
+            font-family: 'Exo 2', sans-serif;
+            background: var(--dark-bg);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* Animated Background */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .bg-animation::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: 
+                radial-gradient(ellipse at 20% 20%, rgba(0, 240, 255, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(191, 0, 255, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 50%, rgba(255, 0, 170, 0.05) 0%, transparent 50%);
+            animation: bgFloat 30s ease-in-out infinite;
+        }
+
+        @keyframes bgFloat {
+            0%, 100% { transform: translate(-10%, -10%) rotate(0deg); }
+            25% { transform: translate(-5%, -15%) rotate(1deg); }
+            50% { transform: translate(-15%, -5%) rotate(-1deg); }
+            75% { transform: translate(-10%, -20%) rotate(0.5deg); }
+        }
+
+        /* Grid Pattern */
+        .grid-pattern {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background-image: 
+                linear-gradient(rgba(0, 240, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 240, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            mask-image: radial-gradient(ellipse at center, black 20%, transparent 70%);
+            -webkit-mask-image: radial-gradient(ellipse at center, black 20%, transparent 70%);
+        }
+
+        /* Floating Particles */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: var(--primary);
+            border-radius: 50%;
+            animation: float 15s infinite ease-in-out;
+            opacity: 0.5;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(100vh) scale(0); opacity: 0; }
+            10% { opacity: 0.5; }
+            90% { opacity: 0.5; }
+            100% { transform: translateY(-100vh) scale(1); opacity: 0; }
+        }
+
+        /* Navigation */
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(10, 10, 26, 0.9);
+            -webkit-backdrop-filter: blur(20px);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-glow);
+            transition: all 0.3s ease;
+        }
+
+        .nav.scrolled {
+            padding: 0.75rem 2rem;
+            background: rgba(5, 5, 16, 0.95);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: var(--gradient-primary);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: var(--glow-primary);
+            animation: pulse 3s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 20px rgba(0, 240, 255, 0.4); }
+            50% { box-shadow: 0 0 40px rgba(0, 240, 255, 0.6), 0 0 60px rgba(191, 0, 255, 0.3); }
+        }
+
+        .logo-text {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gradient-primary);
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover { color: var(--primary); }
+        .nav-link:hover::after { width: 100%; }
+
+        .nav-btn {
+            padding: 0.75rem 1.5rem;
+            background: var(--gradient-primary);
+            border: none;
+            border-radius: 8px;
+            color: var(--darker-bg);
+            font-family: 'Exo 2', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--glow-primary);
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 120px 2rem 4rem;
+            position: relative;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1.25rem;
+            background: var(--glass-bg);
+            border: 1px solid var(--border-glow);
+            border-radius: 50px;
+            font-size: 0.875rem;
+            color: var(--primary);
+            margin-bottom: 2rem;
+            animation: fadeInUp 0.8s ease;
+        }
+
+        .hero-badge i { animation: spin 3s linear infinite; }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .hero-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(2.5rem, 8vw, 5rem);
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            animation: fadeInUp 0.8s ease 0.1s both;
+        }
+
+        .hero-title .gradient {
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: clamp(1rem, 2.5vw, 1.35rem);
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin-bottom: 3rem;
+            line-height: 1.7;
+            animation: fadeInUp 0.8s ease 0.2s both;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            animation: fadeInUp 0.8s ease 0.3s both;
+        }
+
+        .btn {
+            padding: 1rem 2.5rem;
+            border-radius: 12px;
+            font-family: 'Exo 2', sans-serif;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            border: none;
+        }
+
+        .btn-primary {
+            background: var(--gradient-primary);
+            color: var(--darker-bg);
+            box-shadow: var(--glow-primary);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 10px 40px rgba(0, 240, 255, 0.4);
+        }
+
+        .btn-secondary {
+            background: var(--glass-bg);
+            color: var(--text-primary);
+            border: 1px solid var(--border-glow);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(0, 240, 255, 0.1);
+            border-color: var(--primary);
+            transform: translateY(-3px);
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Tech Stack Marquee */
+        .tech-marquee {
+            position: absolute;
+            bottom: 4rem;
+            left: 0;
+            right: 0;
+            overflow: hidden;
+            padding: 1.5rem 0;
+            background: var(--glass-bg);
+            border-top: 1px solid rgba(0, 240, 255, 0.1);
+            border-bottom: 1px solid rgba(0, 240, 255, 0.1);
+        }
+
+        .marquee-content {
+            display: flex;
+            gap: 4rem;
+            animation: marquee 30s linear infinite;
+        }
+
+        .tech-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: var(--text-muted);
+            white-space: nowrap;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+        }
+
+        .tech-item i {
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+
+        @keyframes marquee {
+            from { transform: translateX(0); }
+            to { transform: translateX(-50%); }
+        }
+
+        /* Sections */
+        .section {
+            padding: 6rem 2rem;
+            position: relative;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-badge {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: rgba(0, 240, 255, 0.1);
+            border: 1px solid var(--border-glow);
+            border-radius: 50px;
+            font-size: 0.8rem;
+            color: var(--primary);
+            font-family: 'JetBrains Mono', monospace;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .section-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .section-title .gradient {
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .section-desc {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Feature Cards */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .feature-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-glow);
+            border-radius: 20px;
+            padding: 2.5rem;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s ease;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--gradient-primary);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--primary);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4), var(--glow-primary);
+        }
+
+        .feature-card:hover::before { opacity: 1; }
+
+        .feature-icon {
+            width: 70px;
+            height: 70px;
+            background: var(--gradient-primary);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.75rem;
+            margin-bottom: 1.5rem;
+            color: var(--darker-bg);
+            box-shadow: var(--glow-primary);
+        }
+
+        .feature-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .feature-desc {
+            color: var(--text-secondary);
+            line-height: 1.7;
+            margin-bottom: 1.5rem;
+        }
+
+        .feature-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .feature-tag {
+            padding: 0.35rem 0.75rem;
+            background: rgba(0, 240, 255, 0.1);
+            border: 1px solid rgba(0, 240, 255, 0.2);
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--primary);
+        }
+
+        /* Capabilities Grid */
+        .capabilities-section {
+            background: linear-gradient(180deg, transparent 0%, rgba(0, 240, 255, 0.02) 50%, transparent 100%);
+        }
+
+        .capabilities-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .capability-card {
+            background: var(--glass-bg);
+            border: 1px solid rgba(0, 240, 255, 0.1);
+            border-radius: 16px;
+            padding: 2rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 1.25rem;
+            transition: all 0.3s ease;
+        }
+
+        .capability-card:hover {
+            background: rgba(0, 240, 255, 0.05);
+            border-color: var(--primary);
+            transform: translateX(10px);
+        }
+
+        .capability-icon {
+            width: 50px;
+            height: 50px;
+            min-width: 50px;
+            background: var(--gradient-primary);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            color: var(--darker-bg);
+        }
+
+        .capability-content h4 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .capability-content p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        /* Process Timeline */
+        .process-timeline {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .process-step {
+            flex: 1;
+            min-width: 250px;
+            max-width: 300px;
+            text-align: center;
+            position: relative;
+        }
+
+        .step-number {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 1.5rem;
+            background: var(--gradient-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--darker-bg);
+            box-shadow: var(--glow-primary);
+            position: relative;
+            z-index: 2;
+        }
+
+        .process-step::after {
+            content: '';
+            position: absolute;
+            top: 40px;
+            left: calc(50% + 60px);
+            width: calc(100% - 60px);
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), transparent);
+            z-index: 1;
+        }
+
+        .process-step:last-child::after { display: none; }
+
+        .step-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+
+        .step-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+
+        .step-desc {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        /* Stats Section */
+        .stats-section {
+            background: var(--card-bg);
+            border-top: 1px solid var(--border-glow);
+            border-bottom: 1px solid var(--border-glow);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 3rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .stat-item { text-align: center; }
+
+        .stat-value {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 800;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        /* CTA Section */
+        .cta-section { text-align: center; }
+
+        .cta-box {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 4rem;
+            background: var(--card-bg);
+            border: 1px solid var(--border-glow);
+            border-radius: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-primary);
+        }
+
+        .cta-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .cta-desc {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Footer */
+        .footer {
+            padding: 3rem 2rem;
+            background: var(--darker-bg);
+            border-top: 1px solid var(--border-glow);
+            text-align: center;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-link:hover { color: var(--primary); }
+
+        .footer-text {
+            color: var(--text-muted);
+            font-size: 0.875rem;
+        }
+
+        .footer-text .heart { color: var(--accent); }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav { padding: 1rem; }
+            .nav-links { display: none; }
+            .hero { padding-top: 100px; }
+            .hero-buttons {
+                flex-direction: column;
+                width: 100%;
+                max-width: 300px;
+            }
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+            .tech-marquee { display: none; }
+            .features-grid { grid-template-columns: 1fr; }
+            .process-step::after { display: none; }
+            .cta-box { padding: 2rem; }
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 10px; }
+        ::-webkit-scrollbar-track { background: var(--darker-bg); }
+        ::-webkit-scrollbar-thumb {
+            background: var(--gradient-primary);
+            border-radius: 5px;
+        }
+        ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
+
+        /* Selection */
+        ::selection {
+            background: rgba(0, 240, 255, 0.3);
+            color: var(--text-primary);
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-animation"></div>
+    <div class="grid-pattern"></div>
+    <div class="particles" id="particles"></div>
+
+    <!-- Navigation -->
+    <nav class="nav" id="nav">
+        <a href="/" class="logo">
+            <div class="logo-icon"><i class="fas fa-atom"></i></div>
+            <span class="logo-text">Q-FuseVision</span>
+        </a>
+        <div class="nav-links">
+            <a href="#features" class="nav-link">Features</a>
+            <a href="#capabilities" class="nav-link">Capabilities</a>
+            <a href="#process" class="nav-link">How It Works</a>
+            {% if user.is_authenticated %}
+                <a href="{% url 'dashboard' %}" class="nav-link">Dashboard</a>
+                <a href="{% url 'logout' %}" class="nav-btn">Logout</a>
+            {% else %}
+                <a href="{% url 'login' %}" class="nav-link">Login</a>
+                <a href="{% url 'register' %}" class="nav-btn">Get Started</a>
+            {% endif %}
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-badge">
+            <i class="fas fa-atom"></i>
+            <span>Quantum-Powered AI Vision</span>
+        </div>
+        <h1 class="hero-title">
+            <span class="gradient">Q-FuseVision</span><br>
+            <span>AI Laboratory</span>
+        </h1>
+        <p class="hero-subtitle">
+            Experience the future of computer vision with quantum-enhanced image analysis. 
+            Our platform combines cutting-edge quantum computing, advanced object detection with 
+            visible bounding boxes, and powerful AI models for unprecedented visual intelligence.
+        </p>
+        <div class="hero-buttons">
+            <a href="{% url 'upload' %}" class="btn btn-primary">
+                <i class="fas fa-rocket"></i>
+                Start Experiment
+            </a>
+            <a href="#features" class="btn btn-secondary">
+                <i class="fas fa-info-circle"></i>
+                Learn More
+            </a>
+        </div>
+
+        <div class="tech-marquee">
+            <div class="marquee-content">
+                <div class="tech-item"><i class="fas fa-atom"></i> Quantum Circuits</div>
+                <div class="tech-item"><i class="fas fa-eye"></i> LLaVA Vision</div>
+                <div class="tech-item"><i class="fas fa-brain"></i> Mistral AI</div>
+                <div class="tech-item"><i class="fas fa-vector-square"></i> Object Detection</div>
+                <div class="tech-item"><i class="fas fa-draw-polygon"></i> Edge Detection</div>
+                <div class="tech-item"><i class="fas fa-exclamation-triangle"></i> Anomaly Detection</div>
+                <div class="tech-item"><i class="fas fa-layer-group"></i> Depth Estimation</div>
+                <div class="tech-item"><i class="fas fa-project-diagram"></i> PennyLane VQC</div>
+                <div class="tech-item"><i class="fas fa-atom"></i> Quantum Circuits</div>
+                <div class="tech-item"><i class="fas fa-eye"></i> LLaVA Vision</div>
+                <div class="tech-item"><i class="fas fa-brain"></i> Mistral AI</div>
+                <div class="tech-item"><i class="fas fa-vector-square"></i> Object Detection</div>
+                <div class="tech-item"><i class="fas fa-draw-polygon"></i> Edge Detection</div>
+                <div class="tech-item"><i class="fas fa-exclamation-triangle"></i> Anomaly Detection</div>
+                <div class="tech-item"><i class="fas fa-layer-group"></i> Depth Estimation</div>
+                <div class="tech-item"><i class="fas fa-project-diagram"></i> PennyLane VQC</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="section" id="features">
+        <div class="section-header">
+            <div class="section-badge">✨ Core Features</div>
+            <h2 class="section-title">Advanced <span class="gradient">AI Capabilities</span></h2>
+            <p class="section-desc">Powered by quantum computing and state-of-the-art machine learning models</p>
+        </div>
+
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-atom"></i></div>
+                <h3 class="feature-title">Quantum Fusion Layer</h3>
+                <p class="feature-desc">
+                    4-qubit variational quantum circuit using PennyLane for vision-language 
+                    embedding fusion. Experience true quantum-enhanced feature extraction.
+                </p>
+                <div class="feature-tags">
+                    <span class="feature-tag">PennyLane</span>
+                    <span class="feature-tag">VQC</span>
+                    <span class="feature-tag">4 Qubits</span>
+                </div>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-draw-polygon"></i></div>
+                <h3 class="feature-title">Object Border Detection</h3>
+                <p class="feature-desc">
+                    Advanced edge detection and contour analysis to identify and draw 
+                    precise colored bounding boxes around detected objects with center markers.
+                </p>
+                <div class="feature-tags">
+                    <span class="feature-tag">Canny Edge</span>
+                    <span class="feature-tag">Contours</span>
+                    <span class="feature-tag">Bounding Boxes</span>
+                </div>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-eye"></i></div>
+                <h3 class="feature-title">LLaVA Vision Analysis</h3>
+                <p class="feature-desc">
+                    Multi-modal vision-language understanding powered by LLaVA. 
+                    Ask any question about your images and get intelligent answers.
+                </p>
+                <div class="feature-tags">
+                    <span class="feature-tag">LLaVA 7B</span>
+                    <span class="feature-tag">Multi-modal</span>
+                    <span class="feature-tag">VQA</span>
+                </div>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-exclamation-triangle"></i></div>
+                <h3 class="feature-title">Anomaly Detection</h3>
+                <p class="feature-desc">
+                    Isolation Forest algorithm identifies unusual regions in images. 
+                    Perfect for quality control and defect detection applications.
+                </p>
+                <div class="feature-tags">
+                    <span class="feature-tag">Isolation Forest</span>
+                    <span class="feature-tag">scikit-learn</span>
+                </div>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-layer-group"></i></div>
+                <h3 class="feature-title">Depth Estimation</h3>
+                <p class="feature-desc">
+                    Quantum-inspired algorithms estimate relative object depths, 
+                    determining foreground and background positioning.
+                </p>
+                <div class="feature-tags">
+                    <span class="feature-tag">Quantum Distance</span>
+                    <span class="feature-tag">3D Analysis</span>
+                </div>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-brain"></i></div>
+                <h3 class="feature-title">Mistral Reasoning</h3>
+                <p class="feature-desc">
+                    Advanced language reasoning with Mistral AI. Combines vision analysis 
+                    with quantum vectors for comprehensive understanding.
+                </p>
+                <div class="feature-tags">
+                    <span class="feature-tag">Mistral 7B</span>
+                    <span class="feature-tag">Chain-of-Thought</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Capabilities Section -->
+    <section class="section capabilities-section" id="capabilities">
+        <div class="section-header">
+            <div class="section-badge">🔬 Technical Specs</div>
+            <h2 class="section-title">Vision <span class="gradient">Capabilities</span></h2>
+            <p class="section-desc">Comprehensive image analysis with quantum-enhanced processing</p>
+        </div>
+
+        <div class="capabilities-grid">
+            <div class="capability-card">
+                <div class="capability-icon"><i class="fas fa-crop-alt"></i></div>
+                <div class="capability-content">
+                    <h4>Bounding Box Detection</h4>
+                    <p>Precise object localization with colored bounding boxes and center markers</p>
+                </div>
+            </div>
+
+            <div class="capability-card">
+                <div class="capability-icon"><i class="fas fa-fingerprint"></i></div>
+                <div class="capability-content">
+                    <h4>Shape Analysis</h4>
+                    <p>Circularity, aspect ratio, and extent calculations for each detected object</p>
+                </div>
+            </div>
+
+            <div class="capability-card">
+                <div class="capability-icon"><i class="fas fa-ruler-combined"></i></div>
+                <div class="capability-content">
+                    <h4>Quantum Distance Matrix</h4>
+                    <p>Quantum-inspired spatial relationship analysis between objects</p>
+                </div>
+            </div>
+
+            <div class="capability-card">
+                <div class="capability-icon"><i class="fas fa-th"></i></div>
+                <div class="capability-content">
+                    <h4>Patch Analysis</h4>
+                    <p>32x32 pixel patch feature extraction for detailed region analysis</p>
+                </div>
+            </div>
+
+            <div class="capability-card">
+                <div class="capability-icon"><i class="fas fa-chart-bar"></i></div>
+                <div class="capability-content">
+                    <h4>Statistical Features</h4>
+                    <p>Mean, std, median, and percentile analysis per color channel</p>
+                </div>
+            </div>
+
+            <div class="capability-card">
+                <div class="capability-icon"><i class="fas fa-sliders-h"></i></div>
+                <div class="capability-content">
+                    <h4>Texture Analysis</h4>
+                    <p>Gradient-based texture feature extraction for pattern recognition</p>
+                </div>
+            </div>
+
+            <div class="capability-card">
+                <div class="capability-icon"><i class="fas fa-wave-square"></i></div>
+                <div class="capability-content">
+                    <h4>8D Quantum Vector</h4>
+                    <p>Fused embedding with expectation values and variance measurements</p>
+                </div>
+            </div>
+
+            <div class="capability-card">
+                <div class="capability-icon"><i class="fas fa-network-wired"></i></div>
+                <div class="capability-content">
+                    <h4>Ring Entanglement</h4>
+                    <p>CNOT and CZ gates in ring topology for deep quantum correlations</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Process Section -->
+    <section class="section" id="process">
+        <div class="section-header">
+            <div class="section-badge">⚡ Workflow</div>
+            <h2 class="section-title">How <span class="gradient">It Works</span></h2>
+            <p class="section-desc">From image upload to quantum-enhanced AI analysis in four steps</p>
+        </div>
+
+        <div class="process-timeline">
+            <div class="process-step">
+                <div class="step-number">1</div>
+                <div class="step-icon"><i class="fas fa-upload"></i></div>
+                <h4 class="step-title">Upload Image</h4>
+                <p class="step-desc">Upload any image and ask your question about its contents</p>
+            </div>
+
+            <div class="process-step">
+                <div class="step-number">2</div>
+                <div class="step-icon"><i class="fas fa-vector-square"></i></div>
+                <h4 class="step-title">Object Detection</h4>
+                <p class="step-desc">Advanced vision processing detects objects and draws bounding boxes</p>
+            </div>
+
+            <div class="process-step">
+                <div class="step-number">3</div>
+                <div class="step-icon"><i class="fas fa-atom"></i></div>
+                <h4 class="step-title">Quantum Fusion</h4>
+                <p class="step-desc">4-qubit VQC fuses vision and language embeddings quantum-mechanically</p>
+            </div>
+
+            <div class="process-step">
+                <div class="step-number">4</div>
+                <div class="step-icon"><i class="fas fa-magic"></i></div>
+                <h4 class="step-title">AI Analysis</h4>
+                <p class="step-desc">LLaVA + Mistral provide comprehensive quantum-enhanced answers</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="section stats-section">
+        <div class="stats-grid">
+            <div class="stat-item">
+                <div class="stat-value">{{ total_experiments|default:"0" }}</div>
+                <div class="stat-label">Total Experiments</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">{{ completed_experiments|default:"0" }}</div>
+                <div class="stat-label">Completed</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">4</div>
+                <div class="stat-label">Qubits</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">8D</div>
+                <div class="stat-label">Vector Output</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="section cta-section">
+        <div class="cta-box">
+            <h2 class="cta-title">Ready to Experience <span class="gradient">Quantum Vision?</span></h2>
+            <p class="cta-desc">
+                Start your first experiment now and discover what quantum-enhanced AI can reveal about your images.
+            </p>
+            <a href="{% url 'upload' %}" class="btn btn-primary">
+                <i class="fas fa-rocket"></i>
+                Launch Experiment
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-links">
+            <a href="/" class="footer-link">Home</a>
+            <a href="{% url 'dashboard' %}" class="footer-link">Dashboard</a>
+            <a href="{% url 'upload' %}" class="footer-link">New Experiment</a>
+        </div>
+        <p class="footer-text">
+            Made with <span class="heart">♥</span> using Quantum Computing + AI | Q-FuseVision AI Lab © 2026
+        </p>
+    </footer>
+
+    <script>
+        // Navigation scroll effect
+        const nav = document.getElementById('nav');
+        window.addEventListener('scroll', () => {
+            nav.classList.toggle('scrolled', window.scrollY > 50);
+        });
+
+        // Create floating particles
+        function createParticles() {
+            const container = document.getElementById('particles');
+            const colors = ['#00f0ff', '#bf00ff', '#ff00aa', '#00ff88'];
+            
+            for (let i = 0; i < 50; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+                particle.style.animationDelay = Math.random() * 15 + 's';
+                particle.style.animationDuration = (10 + Math.random() * 20) + 's';
+                container.appendChild(particle);
+            }
+        }
+        createParticles();
+
+        // Smooth scroll for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        });
+
+        // Intersection Observer for animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+        document.querySelectorAll('.feature-card, .capability-card, .process-step').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>

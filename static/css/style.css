@@ -1,0 +1,218 @@
+/*
+ * Q-FuseVision AI Lab - Main Stylesheet
+ * Futuristic Cyberpunk Theme
+ */
+
+:root {
+    --primary: #00f0ff;
+    --secondary: #bf00ff;
+    --accent: #ff00aa;
+    --success: #00ff88;
+    --warning: #ffaa00;
+    --danger: #ff3366;
+    --dark-bg: #0a0a1a;
+    --darker-bg: #050510;
+    --card-bg: rgba(20, 20, 40, 0.9);
+    --glass-bg: rgba(255, 255, 255, 0.03);
+    --border-glow: rgba(0, 240, 255, 0.3);
+    --text-primary: #ffffff;
+    --text-secondary: rgba(255, 255, 255, 0.7);
+    --text-muted: rgba(255, 255, 255, 0.4);
+    --gradient-primary: linear-gradient(135deg, #00f0ff 0%, #bf00ff 50%, #ff00aa 100%);
+    --glow-primary: 0 0 30px rgba(0, 240, 255, 0.4);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Exo 2', sans-serif;
+    background: var(--dark-bg);
+    color: var(--text-primary);
+    min-height: 100vh;
+    line-height: 1.6;
+}
+
+/* Common Components */
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+.gradient-text {
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.glass-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-glow);
+    border-radius: 16px;
+    padding: 1.5rem;
+}
+
+.btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.875rem 1.5rem;
+    background: var(--gradient-primary);
+    border: none;
+    border-radius: 12px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--darker-bg);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    box-shadow: var(--glow-primary);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 40px rgba(0, 240, 255, 0.4);
+}
+
+.btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.875rem 1.5rem;
+    background: transparent;
+    border: 1px solid var(--border-glow);
+    border-radius: 12px;
+    font-family: 'Exo 2', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--primary);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+.btn-secondary:hover {
+    background: rgba(0, 240, 255, 0.1);
+    border-color: var(--primary);
+}
+
+/* Messages */
+.messages {
+    position: fixed;
+    top: 100px;
+    right: 20px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.message {
+    padding: 1rem 1.5rem;
+    border-radius: 12px;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    animation: slideIn 0.3s ease;
+}
+
+.message.success {
+    background: rgba(0, 255, 136, 0.15);
+    border: 1px solid var(--success);
+    color: var(--success);
+}
+
+.message.error {
+    background: rgba(255, 51, 102, 0.15);
+    border: 1px solid var(--danger);
+    color: var(--danger);
+}
+
+.message.warning {
+    background: rgba(255, 170, 0, 0.15);
+    border: 1px solid var(--warning);
+    color: var(--warning);
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(100px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Status Badges */
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.35rem 0.75rem;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.status-completed {
+    background: rgba(0, 255, 136, 0.15);
+    color: var(--success);
+    border: 1px solid var(--success);
+}
+
+.status-processing {
+    background: rgba(0, 240, 255, 0.15);
+    color: var(--primary);
+    border: 1px solid var(--primary);
+}
+
+.status-pending {
+    background: rgba(255, 170, 0, 0.15);
+    color: var(--warning);
+    border: 1px solid var(--warning);
+}
+
+.status-failed {
+    background: rgba(255, 51, 102, 0.15);
+    color: var(--danger);
+    border: 1px solid var(--danger);
+}
+
+/* Loading Spinner */
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid var(--glass-bg);
+    border-top: 3px solid var(--primary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .container {
+        padding: 0 1rem;
+    }
+}

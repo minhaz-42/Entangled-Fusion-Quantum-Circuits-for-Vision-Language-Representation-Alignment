@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Experiment | Q-FuseVision AI Lab</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800&family=Exo+2:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --primary: #00f0ff;
+            --secondary: #bf00ff;
+            --accent: #ff00aa;
+            --success: #00ff88;
+            --warning: #ffaa00;
+            --danger: #ff3366;
+            --dark-bg: #0a0a1a;
+            --darker-bg: #050510;
+            --card-bg: rgba(20, 20, 40, 0.8);
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --border-glow: rgba(0, 240, 255, 0.3);
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.7);
+            --text-muted: rgba(255, 255, 255, 0.4);
+            --gradient-primary: linear-gradient(135deg, #00f0ff 0%, #bf00ff 50%, #ff00aa 100%);
+            --glow-primary: 0 0 30px rgba(0, 240, 255, 0.4);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Exo 2', sans-serif;
+            background: var(--dark-bg);
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+
+        /* Background */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: 
+                radial-gradient(ellipse at 20% 20%, rgba(0, 240, 255, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(191, 0, 255, 0.08) 0%, transparent 50%);
+        }
+
+        .grid-pattern {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background-image: 
+                linear-gradient(rgba(0, 240, 255, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 240, 255, 0.02) 1px, transparent 1px);
+            background-size: 50px 50px;
+        }
+
+        /* Navigation */
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(10, 10, 26, 0.95);
+            -webkit-backdrop-filter: blur(20px);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-glow);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 45px;
+            height: 45px;
+            background: var(--gradient-primary);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            box-shadow: var(--glow-primary);
+        }
+
+        .logo-text {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 700;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-link:hover { color: var(--primary); }
+
+        /* Main Content */
+        .main-content {
+            padding: 120px 2rem 3rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Page Header */
+        .page-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .page-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: rgba(0, 240, 255, 0.1);
+            border: 1px solid var(--border-glow);
+            border-radius: 50px;
+            font-size: 0.8rem;
+            color: var(--primary);
+            font-family: 'JetBrains Mono', monospace;
+            margin-bottom: 1rem;
+        }
+
+        .page-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+        }
+
+        .page-title .gradient {
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .page-subtitle {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Upload Form Container */
+        .form-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        @media (max-width: 900px) {
+            .form-container { grid-template-columns: 1fr; }
+        }
+
+        /* Upload Zone */
+        .upload-section {
+            background: var(--card-bg);
+            border: 1px solid var(--border-glow);
+            border-radius: 20px;
+            padding: 2rem;
+        }
+
+        .section-label {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .section-label i {
+            color: var(--primary);
+        }
+
+        .upload-zone {
+            border: 2px dashed var(--border-glow);
+            border-radius: 16px;
+            padding: 3rem 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .upload-zone:hover,
+        .upload-zone.dragover {
+            border-color: var(--primary);
+            background: rgba(0, 240, 255, 0.05);
+        }
+
+        .upload-zone.has-file {
+            border-color: var(--success);
+            background: rgba(0, 255, 136, 0.05);
+        }
+
+        .upload-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--gradient-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: var(--darker-bg);
+            margin: 0 auto 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .upload-zone:hover .upload-icon {
+            transform: scale(1.1);
+            box-shadow: var(--glow-primary);
+        }
+
+        .upload-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .upload-desc {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .upload-formats {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .format-tag {
+            padding: 0.3rem 0.6rem;
+            background: rgba(0, 240, 255, 0.1);
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--primary);
+        }
+
+        .upload-input {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        /* Image Preview */
+        .preview-container {
+            display: none;
+            margin-top: 1.5rem;
+        }
+
+        .preview-container.show { display: block; }
+
+        .preview-image {
+            width: 100%;
+            max-height: 300px;
+            object-fit: contain;
+            border-radius: 12px;
+            border: 1px solid var(--border-glow);
+        }
+
+        .preview-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1rem;
+            padding: 0.75rem 1rem;
+            background: var(--glass-bg);
+            border-radius: 8px;
+        }
+
+        .preview-name {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .preview-name i { color: var(--success); }
+
+        .preview-size {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .remove-btn {
+            background: rgba(255, 51, 102, 0.1);
+            border: 1px solid var(--danger);
+            color: var(--danger);
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .remove-btn:hover {
+            background: var(--danger);
+            color: white;
+        }
+
+        /* Question Section */
+        .question-section {
+            background: var(--card-bg);
+            border: 1px solid var(--border-glow);
+            border-radius: 20px;
+            padding: 2rem;
+        }
+
+        .question-input {
+            width: 100%;
+            min-height: 150px;
+            background: var(--glass-bg);
+            border: 1px solid var(--border-glow);
+            border-radius: 12px;
+            padding: 1.25rem;
+            font-family: 'Exo 2', sans-serif;
+            font-size: 1rem;
+            color: var(--text-primary);
+            resize: vertical;
+            transition: all 0.3s ease;
+        }
+
+        .question-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.1);
+        }
+
+        .question-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .char-counter {
+            text-align: right;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 0.5rem;
+        }
+
+        /* Suggestion Tags */
+        .suggestions {
+            margin-top: 1.5rem;
+        }
+
+        .suggestions-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.75rem;
+        }
+
+        .suggestion-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .suggestion-tag {
+            padding: 0.5rem 1rem;
+            background: var(--glass-bg);
+            border: 1px solid var(--border-glow);
+            border-radius: 20px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .suggestion-tag:hover {
+            background: rgba(0, 240, 255, 0.1);
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        /* Advanced Options */
+        .advanced-options {
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .advanced-toggle {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            cursor: pointer;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .advanced-toggle i {
+            transition: transform 0.3s ease;
+        }
+
+        .advanced-toggle.open i {
+            transform: rotate(180deg);
+        }
+
+        .advanced-content {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .advanced-content.show { display: block; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .option-group {
+            margin-bottom: 1rem;
+        }
+
+        .option-label {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            background: var(--glass-bg);
+            border: 1px solid var(--border-glow);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .option-label:hover {
+            border-color: var(--primary);
+        }
+
+        .option-checkbox {
+            width: 20px;
+            height: 20px;
+            accent-color: var(--primary);
+        }
+
+        .option-text {
+            flex: 1;
+        }
+
+        .option-text strong {
+            display: block;
+            font-size: 0.9rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .option-text span {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        /* Submit Button */
+        .submit-section {
+            grid-column: 1 / -1;
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        .submit-btn {
+            padding: 1.25rem 3rem;
+            background: var(--gradient-primary);
+            border: none;
+            border-radius: 14px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--darker-bg);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            box-shadow: var(--glow-primary);
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0, 240, 255, 0.4);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .submit-btn.loading .btn-text { display: none; }
+        .submit-btn.loading .btn-loading { display: inline-flex; }
+        .submit-btn .btn-loading { display: none; }
+
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid transparent;
+            border-top-color: var(--darker-bg);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Features Preview */
+        .features-preview {
+            grid-column: 1 / -1;
+            margin-top: 2rem;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.25rem;
+        }
+
+        .feature-item {
+            background: var(--card-bg);
+            border: 1px solid var(--border-glow);
+            border-radius: 12px;
+            padding: 1.5rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .feature-item:hover {
+            border-color: var(--primary);
+            transform: translateY(-3px);
+        }
+
+        .feature-icon {
+            width: 45px;
+            height: 45px;
+            background: var(--gradient-primary);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            color: var(--darker-bg);
+            flex-shrink: 0;
+        }
+
+        .feature-info h4 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.95rem;
+            margin-bottom: 0.35rem;
+        }
+
+        .feature-info p {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        /* Messages */
+        .messages {
+            position: fixed;
+            top: 80px;
+            right: 2rem;
+            z-index: 1001;
+        }
+
+        .message {
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 0.75rem;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        .message.success {
+            background: rgba(0, 255, 136, 0.15);
+            border: 1px solid var(--success);
+            color: var(--success);
+        }
+
+        .message.error {
+            background: rgba(255, 51, 102, 0.15);
+            border: 1px solid var(--danger);
+            color: var(--danger);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav { padding: 0.75rem 1rem; }
+            .nav-links { display: none; }
+            .main-content { padding: 100px 1rem 2rem; }
+            .page-title { font-size: 1.75rem; }
+            .form-container { grid-template-columns: 1fr; }
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--darker-bg); }
+        ::-webkit-scrollbar-thumb {
+            background: var(--gradient-primary);
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-animation"></div>
+    <div class="grid-pattern"></div>
+
+    <!-- Navigation -->
+    <nav class="nav">
+        <a href="{% url 'landing' %}" class="logo">
+            <div class="logo-icon"><i class="fas fa-atom"></i></div>
+            <span class="logo-text">Q-FuseVision</span>
+        </a>
+        <div class="nav-links">
+            <a href="{% url 'landing' %}" class="nav-link"><i class="fas fa-home"></i> Home</a>
+            <a href="{% url 'dashboard' %}" class="nav-link"><i class="fas fa-chart-line"></i> Dashboard</a>
+            {% if user.is_authenticated %}
+                <a href="{% url 'logout' %}" class="nav-link"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            {% else %}
+                <a href="{% url 'login' %}" class="nav-link"><i class="fas fa-sign-in-alt"></i> Login</a>
+            {% endif %}
+        </div>
+    </nav>
+
+    <!-- Messages -->
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+        <div class="message {{ message.tags }}">
+            <i class="fas {% if message.tags == 'success' %}fa-check-circle{% else %}fa-exclamation-circle{% endif %}"></i>
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="page-header">
+            <div class="page-badge">
+                <i class="fas fa-flask"></i>
+                New Experiment
+            </div>
+            <h1 class="page-title">Create <span class="gradient">Quantum Vision</span> Experiment</h1>
+            <p class="page-subtitle">
+                Upload an image and ask any question. Our quantum-enhanced AI will analyze it 
+                with object detection, boundary drawing, and multi-modal understanding.
+            </p>
+        </div>
+
+        <form method="post" enctype="multipart/form-data" id="experimentForm">
+            {% csrf_token %}
+            <div class="form-container">
+                <!-- Upload Section -->
+                <div class="upload-section">
+                    <div class="section-label">
+                        <i class="fas fa-image"></i>
+                        Upload Image
+                    </div>
+                    <div class="upload-zone" id="uploadZone">
+                        <input type="file" name="image" id="imageInput" class="upload-input" accept="image/*" required>
+                        <div class="upload-icon">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                        </div>
+                        <h3 class="upload-title">Drag & Drop or Click to Upload</h3>
+                        <p class="upload-desc">Upload any image for quantum-enhanced analysis</p>
+                        <div class="upload-formats">
+                            <span class="format-tag">JPG</span>
+                            <span class="format-tag">PNG</span>
+                            <span class="format-tag">GIF</span>
+                            <span class="format-tag">WEBP</span>
+                        </div>
+                    </div>
+
+                    <div class="preview-container" id="previewContainer">
+                        <img src="" alt="Preview" class="preview-image" id="previewImage">
+                        <div class="preview-info">
+                            <span class="preview-name">
+                                <i class="fas fa-check-circle"></i>
+                                <span id="fileName">image.jpg</span>
+                            </span>
+                            <span class="preview-size" id="fileSize">0 KB</span>
+                            <button type="button" class="remove-btn" id="removeBtn">
+                                <i class="fas fa-times"></i> Remove
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Question Section -->
+                <div class="question-section">
+                    <div class="section-label">
+                        <i class="fas fa-question-circle"></i>
+                        Your Question
+                    </div>
+                    <textarea 
+                        name="question" 
+                        id="questionInput"
+                        class="question-input" 
+                        placeholder="What would you like to know about this image? Ask anything..."
+                        maxlength="1000"
+                        required
+                    >{{ form.question.value|default:"" }}</textarea>
+                    <div class="char-counter"><span id="charCount">0</span>/1000 characters</div>
+
+                    <div class="suggestions">
+                        <div class="suggestions-label">💡 Try these questions:</div>
+                        <div class="suggestion-tags">
+                            <span class="suggestion-tag" data-text="What objects can you detect in this image?">🔍 Detect objects</span>
+                            <span class="suggestion-tag" data-text="Describe what you see in detail.">📝 Describe image</span>
+                            <span class="suggestion-tag" data-text="Are there any anomalies or unusual elements?">⚠️ Find anomalies</span>
+                            <span class="suggestion-tag" data-text="What are the main colors and shapes?">🎨 Analyze colors</span>
+                            <span class="suggestion-tag" data-text="How many distinct objects are there?">📊 Count objects</span>
+                            <span class="suggestion-tag" data-text="What is the overall mood or theme?">🎭 Interpret mood</span>
+                        </div>
+                    </div>
+
+                    <!-- Advanced Options -->
+                    <div class="advanced-options">
+                        <div class="advanced-toggle" id="advancedToggle">
+                            <i class="fas fa-chevron-down"></i>
+                            <span>Advanced Options</span>
+                        </div>
+                        <div class="advanced-content" id="advancedContent">
+                            <div class="option-group">
+                                <label class="option-label">
+                                    <input type="checkbox" name="enable_object_detection" class="option-checkbox" checked>
+                                    <div class="option-text">
+                                        <strong>Object Detection & Bounding Boxes</strong>
+                                        <span>Draw visible borders around detected objects</span>
+                                    </div>
+                                </label>
+                            </div>
+                            <div class="option-group">
+                                <label class="option-label">
+                                    <input type="checkbox" name="enable_anomaly_detection" class="option-checkbox" checked>
+                                    <div class="option-text">
+                                        <strong>Anomaly Detection</strong>
+                                        <span>Find unusual regions using Isolation Forest</span>
+                                    </div>
+                                </label>
+                            </div>
+                            <div class="option-group">
+                                <label class="option-label">
+                                    <input type="checkbox" name="enable_depth_estimation" class="option-checkbox" checked>
+                                    <div class="option-text">
+                                        <strong>Depth Estimation</strong>
+                                        <span>Estimate foreground/background positions</span>
+                                    </div>
+                                </label>
+                            </div>
+                            <div class="option-group">
+                                <label class="option-label">
+                                    <input type="checkbox" name="enable_quantum_fusion" class="option-checkbox" checked>
+                                    <div class="option-text">
+                                        <strong>Quantum Fusion</strong>
+                                        <span>Use 4-qubit VQC for enhanced analysis</span>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submit Section -->
+                <div class="submit-section">
+                    <button type="submit" class="submit-btn" id="submitBtn">
+                        <i class="fas fa-atom"></i>
+                        <span class="btn-text">Start Quantum Analysis</span>
+                        <span class="btn-loading">
+                            <div class="spinner"></div>
+                            Processing...
+                        </span>
+                    </button>
+                </div>
+
+                <!-- Features Preview -->
+                <div class="features-preview">
+                    <div class="features-grid">
+                        <div class="feature-item">
+                            <div class="feature-icon"><i class="fas fa-draw-polygon"></i></div>
+                            <div class="feature-info">
+                                <h4>Object Boundaries</h4>
+                                <p>Visible bounding boxes drawn around detected objects</p>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon"><i class="fas fa-atom"></i></div>
+                            <div class="feature-info">
+                                <h4>Quantum Fusion</h4>
+                                <p>4-qubit VQC fuses vision and language embeddings</p>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon"><i class="fas fa-eye"></i></div>
+                            <div class="feature-info">
+                                <h4>LLaVA Vision</h4>
+                                <p>Multi-modal AI understands your images</p>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon"><i class="fas fa-brain"></i></div>
+                            <div class="feature-info">
+                                <h4>Mistral Reasoning</h4>
+                                <p>Advanced AI provides intelligent answers</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // Elements
+        const uploadZone = document.getElementById('uploadZone');
+        const imageInput = document.getElementById('imageInput');
+        const previewContainer = document.getElementById('previewContainer');
+        const previewImage = document.getElementById('previewImage');
+        const fileName = document.getElementById('fileName');
+        const fileSize = document.getElementById('fileSize');
+        const removeBtn = document.getElementById('removeBtn');
+        const questionInput = document.getElementById('questionInput');
+        const charCount = document.getElementById('charCount');
+        const submitBtn = document.getElementById('submitBtn');
+        const form = document.getElementById('experimentForm');
+        const advancedToggle = document.getElementById('advancedToggle');
+        const advancedContent = document.getElementById('advancedContent');
+
+        // Drag and drop
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(event => {
+            uploadZone.addEventListener(event, e => {
+                e.preventDefault();
+                e.stopPropagation();
+            });
+        });
+
+        ['dragenter', 'dragover'].forEach(event => {
+            uploadZone.addEventListener(event, () => uploadZone.classList.add('dragover'));
+        });
+
+        ['dragleave', 'drop'].forEach(event => {
+            uploadZone.addEventListener(event, () => uploadZone.classList.remove('dragover'));
+        });
+
+        uploadZone.addEventListener('drop', e => {
+            const files = e.dataTransfer.files;
+            if (files.length) {
+                imageInput.files = files;
+                handleFile(files[0]);
+            }
+        });
+
+        // File input change
+        imageInput.addEventListener('change', e => {
+            if (e.target.files.length) {
+                handleFile(e.target.files[0]);
+            }
+        });
+
+        // Handle file
+        function handleFile(file) {
+            if (!file.type.startsWith('image/')) {
+                alert('Please upload an image file.');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = e => {
+                previewImage.src = e.target.result;
+                previewContainer.classList.add('show');
+                uploadZone.classList.add('has-file');
+            };
+            reader.readAsDataURL(file);
+
+            fileName.textContent = file.name;
+            fileSize.textContent = formatFileSize(file.size);
+        }
+
+        // Format file size
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        // Remove file
+        removeBtn.addEventListener('click', () => {
+            imageInput.value = '';
+            previewContainer.classList.remove('show');
+            uploadZone.classList.remove('has-file');
+            previewImage.src = '';
+        });
+
+        // Character counter
+        questionInput.addEventListener('input', () => {
+            charCount.textContent = questionInput.value.length;
+        });
+
+        // Suggestion tags
+        document.querySelectorAll('.suggestion-tag').forEach(tag => {
+            tag.addEventListener('click', () => {
+                questionInput.value = tag.dataset.text;
+                charCount.textContent = questionInput.value.length;
+                questionInput.focus();
+            });
+        });
+
+        // Advanced options toggle
+        advancedToggle.addEventListener('click', () => {
+            advancedToggle.classList.toggle('open');
+            advancedContent.classList.toggle('show');
+        });
+
+        // Form submit
+        form.addEventListener('submit', e => {
+            if (!imageInput.files.length) {
+                e.preventDefault();
+                alert('Please upload an image.');
+                return;
+            }
+            if (!questionInput.value.trim()) {
+                e.preventDefault();
+                alert('Please enter a question.');
+                return;
+            }
+            submitBtn.classList.add('loading');
+            submitBtn.disabled = true;
+        });
+
+        // Auto-hide messages
+        setTimeout(() => {
+            document.querySelectorAll('.message').forEach(msg => {
+                msg.style.opacity = '0';
+                msg.style.transform = 'translateX(100%)';
+                setTimeout(() => msg.remove(), 300);
+            });
+        }, 5000);
+    </script>
+</body>
+</html>

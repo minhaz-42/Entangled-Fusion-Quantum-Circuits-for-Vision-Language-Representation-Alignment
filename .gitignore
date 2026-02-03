@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.sqlite3
+*.db
+.env
+venv/
+.envrc
+
+# macOS
+.DS_Store
+
+# Django media and static
+/media/
+/staticfiles/
+
+# VSCode
+.vscode/
+
+# Logs
+*.log
+
+# Editor backups
+*~
+
+# Coverage
+htmlcov/
+.coverage
+
+# Node
+node_modules/
