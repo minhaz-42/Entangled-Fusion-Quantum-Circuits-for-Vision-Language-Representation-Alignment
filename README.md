@@ -1,4 +1,4 @@
-# Q-FuseVision
+# Entangled-Fusion-Quantum-Circuits-for-Vision-Language-Representation-Alignment
 
 Q-FuseVision — A cyberpunk-styled Django lab that fuses computer vision and language with quantum-inspired techniques to deliver interactive, explainable image analysis and vision-language reasoning.
 
