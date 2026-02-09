@@ -1,0 +1,114 @@
+[
+  {
+    "fusion_type": "bilinear",
+    "param_count": 56064,
+    "output_shape": [
+      4,
+      128
+    ],
+    "mean_latency_ms": 0.36137533364429447,
+    "std_latency_ms": 0.3584698440536031,
+    "min_latency_ms": 0.10266699973726645,
+    "max_latency_ms": 0.8682920015417039,
+    "batch_size": 4,
+    "num_batches": 3,
+    "extra": {
+      "rank": 16
+    }
+  },
+  {
+    "fusion_type": "classical_fallback",
+    "param_count": 82688,
+    "output_shape": [
+      4,
+      128
+    ],
+    "mean_latency_ms": 0.09005566607811488,
+    "std_latency_ms": 0.02005935544131138,
+    "min_latency_ms": 0.07533399912063032,
+    "max_latency_ms": 0.1184169996122364,
+    "batch_size": 4,
+    "num_batches": 3,
+    "extra": {
+      "method": "concat_tanh"
+    }
+  },
+  {
+    "fusion_type": "cross_attn",
+    "param_count": 842880,
+    "output_shape": [
+      4,
+      128
+    ],
+    "mean_latency_ms": 1.0479026653532248,
+    "std_latency_ms": 0.20059515100704958,
+    "min_latency_ms": 0.9047499988810159,
+    "max_latency_ms": 1.3315830001374707,
+    "batch_size": 4,
+    "num_batches": 3,
+    "extra": {
+      "num_heads": 4,
+      "num_layers": 2
+    }
+  },
+  {
+    "fusion_type": "mlp",
+    "param_count": 214016,
+    "output_shape": [
+      4,
+      128
+    ],
+    "mean_latency_ms": 0.09636133351402047,
+    "std_latency_ms": 0.01401400109363677,
+    "min_latency_ms": 0.08583399903727695,
+    "max_latency_ms": 0.11616700066952035,
+    "batch_size": 4,
+    "num_batches": 3,
+    "extra": {
+      "hidden_dim": 256,
+      "num_layers": 3,
+      "activation": "gelu",
+      "dropout": 0.1
+    }
+  },
+  {
+    "fusion_type": "tensor",
+    "param_count": 1123200,
+    "output_shape": [
+      4,
+      128
+    ],
+    "mean_latency_ms": 0.9580973322348049,
+    "std_latency_ms": 0.16025842236082152,
+    "min_latency_ms": 0.8021670000744052,
+    "max_latency_ms": 1.1784999987867195,
+    "batch_size": 4,
+    "num_batches": 3,
+    "extra": {
+      "hidden_dim": 64
+    }
+  },
+  {
+    "fusion_type": "vqc",
+    "param_count": 58896,
+    "output_shape": [
+      4,
+      128
+    ],
+    "mean_latency_ms": 0.28333366572041996,
+    "std_latency_ms": 0.08202493212730197,
+    "min_latency_ms": 0.20454200057429262,
+    "max_latency_ms": 0.3964589996030554,
+    "batch_size": 4,
+    "num_batches": 3,
+    "extra": {
+      "num_qubits": 8,
+      "n_a": 4,
+      "n_b": 4,
+      "num_layers": 4,
+      "topology": "full",
+      "using_pennylane": false,
+      "entangle_pairs": 16
+    }
+  }
+]

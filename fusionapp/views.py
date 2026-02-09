@@ -5,6 +5,7 @@ Handles all page rendering and experiment processing.
 """
 
 import json
+import logging
 import traceback
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
@@ -17,9 +18,17 @@ from django.contrib.auth.decorators import login_required
 
 from .models import FusionExperiment
 from .forms import FusionExperimentForm, CustomUserCreationForm
-from .quantum_fusion import fuse_vision_language
+from .quantum_fusion import (
+    fuse_vision_language,
+    get_last_fusion_info,
+    reset_fusion_model,
+    fusion_config,
+)
 from .ollama_helper import process_experiment, ollama_helper
 from .vision_processor import analyze_image_advanced, vision_processor, create_annotated_image
+
+
+logger = logging.getLogger(__name__)
 
 
 def landing(request):
@@ -154,19 +163,88 @@ def upload_experiment(request):
                     advanced_analysis = analyze_image_advanced(image_path)
                     # Save analysis summary
                     if advanced_analysis.get('processing_status') == 'success':
-                        experiment.advanced_analysis = json.dumps(advanced_analysis)
+                        # store later after we also inject fusion diagnostics
+                        pass
                 except Exception as e:
-                    print(f"Advanced vision warning: {e}")
+                    logger.warning("Advanced vision processing failed: %s", e)
                     advanced_analysis = None
                 
                 # Step 2: Quantum Fusion
                 try:
-                    fused_vector = fuse_vision_language(image_path, question)
+                    # Apply advanced fusion settings from the form (safe, per-request)
+                    enable_quantum_fusion = request.POST.get('enable_quantum_fusion') == 'on'
+                    requested_fusion_type = (request.POST.get('fusion_type') or fusion_config.FUSION_TYPE).strip()
+
+                    # If quantum fusion disabled, force a cheap classical baseline
+                    fusion_type = requested_fusion_type if enable_quantum_fusion else 'classical_fallback'
+
+                    overrides: dict = {"FUSION_TYPE": fusion_type}
+
+                    if fusion_type == 'vqc':
+                        # VQC-specific overrides
+                        topology = (request.POST.get('vqc_topology') or fusion_config.VQC_ENTANGLE_TOPOLOGY).strip()
+                        encoding = (request.POST.get('vqc_encoding') or fusion_config.VQC_ENCODING).strip()
+
+                        def _to_int(val, default):
+                            try:
+                                return int(val)
+                            except Exception:
+                                return default
+
+                        num_qubits = _to_int(request.POST.get('vqc_num_qubits'), fusion_config.NUM_QUBITS)
+                        num_layers = _to_int(request.POST.get('vqc_num_layers'), fusion_config.VQC_NUM_LAYERS)
+                        # Keep qubits even + within a sane range for demo runtime
+                        if num_qubits < 2:
+                            num_qubits = 2
+                        if num_qubits % 2 != 0:
+                            num_qubits += 1
+                        if num_qubits > 16:
+                            num_qubits = 16
+                        if num_layers < 1:
+                            num_layers = 1
+                        if num_layers > 8:
+                            num_layers = 8
+
+                        overrides.update({
+                            "NUM_QUBITS": num_qubits,
+                            "VQC_NUM_LAYERS": num_layers,
+                            "VQC_ENTANGLE_TOPOLOGY": topology,
+                            "VQC_ENCODING": encoding,
+                            "VQC_MEASURE_ENTANGLEMENT": True,
+                        })
+
+                    # Save/restore global cfg to avoid cross-request leakage
+                    old_cfg = fusion_config.copy()
+                    try:
+                        fusion_config.update(overrides)
+                        fusion_config.validate()
+                        reset_fusion_model()
+
+                        fused_vector = fuse_vision_language(image_path, question)
+                        fusion_info = get_last_fusion_info()
+                    finally:
+                        fusion_config.update(old_cfg.to_dict())
+                        reset_fusion_model()
+
                     experiment.set_fused_vector_list(fused_vector)
+
+                    # Merge fusion diagnostics into advanced_analysis JSON
+                    adv_dict = advanced_analysis if isinstance(advanced_analysis, dict) else {}
+                    adv_dict["fusion_settings"] = overrides
+                    adv_dict["quantum_fusion"] = fusion_info
+                    experiment.advanced_analysis = json.dumps(adv_dict)
                 except Exception as e:
-                    print(f"Quantum fusion warning: {e}")
-                    fused_vector = [0.0] * 8  # Fallback vector
+                    logger.warning("Fusion failed, using fallback vector: %s", e)
+                    fused_vector = [0.0] * int(getattr(fusion_config, 'OUTPUT_DIM', 8))
                     experiment.set_fused_vector_list(fused_vector)
+
+                    adv_dict = advanced_analysis if isinstance(advanced_analysis, dict) else {}
+                    adv_dict["fusion_settings"] = {"FUSION_TYPE": "fallback"}
+                    adv_dict["quantum_fusion"] = {
+                        "error": str(e),
+                        "config_snapshot": fusion_config.to_dict(),
+                    }
+                    experiment.advanced_analysis = json.dumps(adv_dict)
                 
                 # Step 3: Ollama Processing with advanced analysis
                 results = process_experiment(
@@ -238,11 +316,23 @@ def results(request, experiment_id):
     
     # Get vector data for visualization
     vector_data = experiment.get_vector_visualization_data()
+
+    adv = experiment.get_advanced_analysis()
+    quantum_info = adv.get('quantum_fusion') if isinstance(adv, dict) else None
+    quantum_meta = quantum_info.get('meta') if isinstance(quantum_info, dict) else None
+    entanglement_report = quantum_info.get('entanglement_report') if isinstance(quantum_info, dict) else None
+    circuit_analysis = quantum_info.get('circuit_analysis') if isinstance(quantum_info, dict) else None
+    fusion_settings = adv.get('fusion_settings') if isinstance(adv, dict) else None
     
     context = {
         'experiment': experiment,
         'vector_data': json.dumps(vector_data),
         'vector_list': experiment.get_fused_vector_list(),
+        'quantum_info': quantum_info,
+        'quantum_meta': quantum_meta,
+        'entanglement_report': entanglement_report,
+        'circuit_analysis': circuit_analysis,
+        'fusion_settings': fusion_settings,
         'page_title': f'Results #{experiment_id}',
     }
     

@@ -824,6 +824,89 @@
                 </div>
             </div>
 
+            <!-- Quantum Diagnostics (Phase 2) -->
+            {% if quantum_meta or entanglement_report or circuit_analysis or fusion_settings %}
+            <div class="result-card">
+                <div class="card-header">
+                    <h2 class="card-title">
+                        <i class="fas fa-microchip"></i>
+                        Quantum Diagnostics
+                    </h2>
+                </div>
+                <div class="card-body">
+                    <div class="metadata-grid">
+                        {% if quantum_meta %}
+                        <div class="metadata-item">
+                            <div class="metadata-label">Fusion Method</div>
+                            <div class="metadata-value">{{ quantum_meta.name|default:"-" }}</div>
+                        </div>
+                        <div class="metadata-item">
+                            <div class="metadata-label">Latency</div>
+                            <div class="metadata-value">{{ quantum_meta.last_forward_ms|floatformat:2 }} ms</div>
+                        </div>
+                        <div class="metadata-item">
+                            <div class="metadata-label">Parameters</div>
+                            <div class="metadata-value">{{ quantum_meta.param_count|default:"-" }}</div>
+                        </div>
+                        {% endif %}
+
+                        {% if fusion_settings %}
+                        <div class="metadata-item">
+                            <div class="metadata-label">Topology</div>
+                            <div class="metadata-value">{{ fusion_settings.VQC_ENTANGLE_TOPOLOGY|default:"-" }}</div>
+                        </div>
+                        <div class="metadata-item">
+                            <div class="metadata-label">Encoding</div>
+                            <div class="metadata-value">{{ fusion_settings.VQC_ENCODING|default:"-" }}</div>
+                        </div>
+                        <div class="metadata-item">
+                            <div class="metadata-label">Qubits</div>
+                            <div class="metadata-value">{{ fusion_settings.NUM_QUBITS|default:"-" }}</div>
+                        </div>
+                        <div class="metadata-item">
+                            <div class="metadata-label">Layers</div>
+                            <div class="metadata-value">{{ fusion_settings.VQC_NUM_LAYERS|default:"-" }}</div>
+                        </div>
+                        {% endif %}
+
+                        {% if entanglement_report %}
+                        <div class="metadata-item">
+                            <div class="metadata-label">Entanglement S(ρA)</div>
+                            <div class="metadata-value">{{ entanglement_report.von_neumann_entropy|default:"-" }}</div>
+                        </div>
+                        <div class="metadata-item">
+                            <div class="metadata-label">Normalised Entropy</div>
+                            <div class="metadata-value">{{ entanglement_report.normalised_entropy|default:"-" }}</div>
+                        </div>
+                        <div class="metadata-item">
+                            <div class="metadata-label">Mutual Info (proxy)</div>
+                            <div class="metadata-value">{{ entanglement_report.mutual_information|default:"-" }}</div>
+                        </div>
+                        <div class="metadata-item">
+                            <div class="metadata-label">Schmidt Rank</div>
+                            <div class="metadata-value">{{ entanglement_report.schmidt_rank|default:"-" }}</div>
+                        </div>
+                        {% endif %}
+
+                        {% if circuit_analysis %}
+                        <div class="metadata-item">
+                            <div class="metadata-label">Gate Count</div>
+                            <div class="metadata-value">{{ circuit_analysis.gate_analysis.total_gates|default:"-" }}</div>
+                        </div>
+                        <div class="metadata-item">
+                            <div class="metadata-label">CNOT Count</div>
+                            <div class="metadata-value">{{ circuit_analysis.gate_analysis.cnot_count|default:"-" }}</div>
+                        </div>
+                        <div class="metadata-item">
+                            <div class="metadata-label">Depth Estimate</div>
+                            <div class="metadata-value">{{ circuit_analysis.gate_analysis.depth_estimate|default:"-" }}</div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
             <!-- Vision Analysis -->
             {% if experiment.vision_analysis %}
             <div class="result-card">

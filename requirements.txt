@@ -1,20 +1,27 @@
-# Q-FuseVision AI Lab - Requirements
-# Django + Ollama + Quantum Fusion Platform
+# ── Entangled Fusion Circuits (EFC) — Requirements ──────────────
+# Q-FuseVision AI Lab + fusion_core Research Framework
 
 # Django Framework
-Django>=4.2,<5.0
+Django>=4.2,<6.0
 
-# Quantum Computing
+# Quantum Computing (optional — classical fallback when missing)
 pennylane>=0.33.0
 pennylane-lightning>=0.33.0
 
-# Machine Learning & Vision
+# Deep Learning & Vision
 torch>=2.0.0
 torchvision>=0.15.0
 Pillow>=10.0.0
 numpy>=1.24.0
+
+# Classical ML / Metrics
 scikit-learn>=1.3.0
+
+# Computer Vision (optional — PIL fallback when missing)
 opencv-python>=4.8.0
+
+# Visualisation & Publication Outputs
+matplotlib>=3.7.0
 
 # Utilities
 python-dotenv>=1.0.0

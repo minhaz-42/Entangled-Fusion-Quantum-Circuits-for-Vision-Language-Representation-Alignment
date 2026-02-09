@@ -804,9 +804,59 @@
                                     <input type="checkbox" name="enable_quantum_fusion" class="option-checkbox" checked>
                                     <div class="option-text">
                                         <strong>Quantum Fusion</strong>
-                                        <span>Use 4-qubit VQC for enhanced analysis</span>
+                                        <span>Run fusion model + log entanglement diagnostics</span>
                                     </div>
                                 </label>
+                            </div>
+
+                            <div class="option-group">
+                                <div class="option-text" style="width: 100%;">
+                                    <strong>Fusion Method</strong>
+                                    <span>Select the fusion module used for this experiment</span>
+                                    <div style="margin-top: 0.75rem;">
+                                        <select name="fusion_type" id="fusionType" class="question-input" style="min-height: 48px;">
+                                            <option value="vqc" selected>VQC (Entangled Quantum Fusion)</option>
+                                            <option value="cross_attn">Cross-Attention</option>
+                                            <option value="mlp">MLP Fusion</option>
+                                            <option value="bilinear">Bilinear Fusion</option>
+                                            <option value="tensor">Tensor Fusion</option>
+                                            <option value="classical_fallback">Classical Fallback</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="option-group" id="vqcOptions">
+                                <div class="option-text" style="width: 100%;">
+                                    <strong>VQC Settings</strong>
+                                    <span>Only applies when Fusion Method = VQC</span>
+                                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-top: 0.75rem;">
+                                        <div>
+                                            <div style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 0.4rem;">Topology</div>
+                                            <select name="vqc_topology" id="vqcTopology" class="question-input" style="min-height: 48px;">
+                                                <option value="full" selected>full</option>
+                                                <option value="ring">ring</option>
+                                                <option value="linear">linear</option>
+                                                <option value="ladder">ladder</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <div style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 0.4rem;">Encoding</div>
+                                            <select name="vqc_encoding" id="vqcEncoding" class="question-input" style="min-height: 48px;">
+                                                <option value="angle" selected>angle</option>
+                                                <option value="iqp">iqp</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <div style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 0.4rem;"># Qubits (even)</div>
+                                            <input type="number" name="vqc_num_qubits" id="vqcNumQubits" class="question-input" value="8" min="2" max="16" step="2" />
+                                        </div>
+                                        <div>
+                                            <div style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 0.4rem;"># Layers</div>
+                                            <input type="number" name="vqc_num_layers" id="vqcNumLayers" class="question-input" value="4" min="1" max="8" step="1" />
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -838,7 +888,7 @@
                             <div class="feature-icon"><i class="fas fa-atom"></i></div>
                             <div class="feature-info">
                                 <h4>Quantum Fusion</h4>
-                                <p>4-qubit VQC fuses vision and language embeddings</p>
+                                <p>Entangled VQC fuses vision and language embeddings</p>
                             </div>
                         </div>
                         <div class="feature-item">
@@ -988,6 +1038,25 @@
                 setTimeout(() => msg.remove(), 300);
             });
         }, 5000);
+    </script>
+
+    <script>
+        // Show/hide VQC settings based on fusion type + quantum fusion toggle
+        const enableQuantum = document.querySelector('input[name="enable_quantum_fusion"]');
+        const fusionType = document.getElementById('fusionType');
+        const vqcOptions = document.getElementById('vqcOptions');
+
+        function updateVqcVisibility() {
+            const quantumOn = enableQuantum && enableQuantum.checked;
+            const isVqc = fusionType && fusionType.value === 'vqc';
+            if (vqcOptions) {
+                vqcOptions.style.display = (quantumOn && isVqc) ? 'block' : 'none';
+            }
+        }
+
+        if (enableQuantum) enableQuantum.addEventListener('change', updateVqcVisibility);
+        if (fusionType) fusionType.addEventListener('change', updateVqcVisibility);
+        updateVqcVisibility();
     </script>
 </body>
 </html>

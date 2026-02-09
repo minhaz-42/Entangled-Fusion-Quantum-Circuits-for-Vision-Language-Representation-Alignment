@@ -13,7 +13,10 @@ from PIL import Image, ImageDraw, ImageFilter, ImageEnhance
 import json
 import os
 import importlib
+import logging
 from pathlib import Path
+
+logger = logging.getLogger(__name__)
 
 try:
     cv2 = importlib.import_module("cv2")
@@ -21,7 +24,7 @@ try:
 except Exception:
     cv2 = None
     CV2_AVAILABLE = False
-    print("Warning: OpenCV not available. Using PIL-based fallback.")
+    logger.info("OpenCV not available. Using PIL-based fallback.")
 
 try:
     IsolationForest = importlib.import_module("sklearn.ensemble").IsolationForest
@@ -31,7 +34,7 @@ except Exception:
     IsolationForest = None
     StandardScaler = None
     SKLEARN_AVAILABLE = False
-    print("Warning: scikit-learn not available. Anomaly detection disabled.")
+    logger.info("scikit-learn not available. Anomaly detection disabled.")
 
 
 class QuantumDistanceCalculator:
