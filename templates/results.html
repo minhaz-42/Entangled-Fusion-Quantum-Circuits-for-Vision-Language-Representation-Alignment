@@ -1,837 +1,845 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Results #{{ experiment.pk }} | Q-FuseVision AI Lab</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800&family=Exo+2:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         :root {
-            --primary: #00f0ff;
-            --secondary: #bf00ff;
-            --accent: #ff00aa;
-            --success: #00ff88;
-            --warning: #ffaa00;
-            --danger: #ff3366;
-            --dark-bg: #0a0a1a;
-            --darker-bg: #050510;
-            --card-bg: rgba(20, 20, 40, 0.8);
-            --glass-bg: rgba(255, 255, 255, 0.03);
-            --border-glow: rgba(0, 240, 255, 0.3);
-            --text-primary: #ffffff;
-            --text-secondary: rgba(255, 255, 255, 0.7);
-            --text-muted: rgba(255, 255, 255, 0.4);
-            --gradient-primary: linear-gradient(135deg, #00f0ff 0%, #bf00ff 50%, #ff00aa 100%);
-            --glow-primary: 0 0 30px rgba(0, 240, 255, 0.4);
+            --clr-bg-deep: #06070e;
+            --clr-bg: #0b0d1a;
+            --clr-bg-card: rgba(15, 18, 35, 0.75);
+            --clr-bg-glass: rgba(255, 255, 255, 0.04);
+            --clr-border: rgba(99, 130, 255, 0.18);
+            --clr-border-hi: rgba(99, 130, 255, 0.45);
+            --clr-accent: #6c8aff;
+            --clr-accent2: #a855f7;
+            --clr-accent3: #f472b6;
+            --clr-success: #34d399;
+            --clr-warning: #fbbf24;
+            --clr-danger: #f87171;
+            --grad-main: linear-gradient(135deg, #6c8aff 0%, #a855f7 50%, #f472b6 100%);
+            --grad-subtle: linear-gradient(135deg, rgba(108, 138, 255, 0.15), rgba(168, 85, 247, 0.10), rgba(244, 114, 182, 0.08));
+            --clr-text: #eef0ff;
+            --clr-text-2: rgba(238, 240, 255, 0.7);
+            --clr-text-3: rgba(238, 240, 255, 0.4);
+            --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.35), 0 2px 8px rgba(108, 138, 255, 0.08);
+            --shadow-glow: 0 0 40px rgba(108, 138, 255, 0.25);
+            --shadow-btn: 0 4px 20px rgba(108, 138, 255, 0.35);
+            --radius-sm: 8px;
+            --radius-md: 14px;
+            --radius-lg: 22px;
+            --radius-xl: 30px;
+            --ff-body: 'Inter', system-ui, sans-serif;
+            --ff-head: 'Space Grotesk', var(--ff-body);
+            --ff-mono: 'JetBrains Mono', monospace;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box
+        }
+
+        html {
+            scroll-behavior: smooth
+        }
+
         body {
-            font-family: 'Exo 2', sans-serif;
-            background: var(--dark-bg);
-            color: var(--text-primary);
+            font-family: var(--ff-body);
+            background: var(--clr-bg);
+            color: var(--clr-text);
             min-height: 100vh;
+            -webkit-font-smoothing: antialiased
         }
 
-        /* Background */
-        .bg-animation {
+        .bg-orbs {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            inset: 0;
+            z-index: -2;
+            overflow: hidden;
+            pointer-events: none
+        }
+
+        .bg-mesh {
+            position: fixed;
+            inset: 0;
             z-index: -1;
-            background: 
-                radial-gradient(ellipse at 20% 20%, rgba(0, 240, 255, 0.08) 0%, transparent 50%),
-                radial-gradient(ellipse at 80% 80%, rgba(191, 0, 255, 0.08) 0%, transparent 50%);
+            background-image: linear-gradient(rgba(108, 138, 255, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(108, 138, 255, 0.03) 1px, transparent 1px);
+            background-size: 60px 60px;
+            mask-image: radial-gradient(ellipse at center, black 30%, transparent 75%);
+            -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 75%);
+            pointer-events: none
         }
 
-        /* Navigation */
+        @keyframes orbFloat0 {
+
+            0%,
+            100% {
+                transform: translate(0, 0) scale(1)
+            }
+
+            50% {
+                transform: translate(60px, -80px) scale(1.15)
+            }
+        }
+
+        @keyframes orbFloat1 {
+
+            0%,
+            100% {
+                transform: translate(0, 0) scale(1)
+            }
+
+            50% {
+                transform: translate(-70px, 50px) scale(0.9)
+            }
+        }
+
+        @keyframes orbFloat2 {
+
+            0%,
+            100% {
+                transform: translate(0, 0) scale(1.05)
+            }
+
+            50% {
+                transform: translate(40px, 70px) scale(0.95)
+            }
+        }
+
+        /* Nav */
         .nav {
-            position: fixed;
+            position: sticky;
             top: 0;
-            left: 0;
-            right: 0;
             z-index: 1000;
             padding: 1rem 2rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: rgba(10, 10, 26, 0.95);
-            -webkit-backdrop-filter: blur(20px);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--border-glow);
+            background: rgba(11, 13, 26, 0.92);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border-bottom: 1px solid var(--clr-border)
         }
 
         .logo {
             display: flex;
             align-items: center;
-            gap: 1rem;
-            text-decoration: none;
+            gap: 0.85rem;
+            text-decoration: none
         }
 
         .logo-icon {
-            width: 45px;
-            height: 45px;
-            background: var(--gradient-primary);
-            border-radius: 10px;
+            width: 42px;
+            height: 42px;
+            background: var(--grad-main);
+            border-radius: 11px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.25rem;
-            box-shadow: var(--glow-primary);
+            font-size: 1.15rem;
+            transition: transform 0.3s;
+            box-shadow: var(--shadow-glow)
+        }
+
+        .logo:hover .logo-icon {
+            transform: rotate(15deg) scale(1.08)
         }
 
         .logo-text {
-            font-family: 'Orbitron', sans-serif;
+            font-family: var(--ff-head);
             font-size: 1.25rem;
             font-weight: 700;
-            background: var(--gradient-primary);
+            background: var(--grad-main);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            background-clip: text;
+            background-clip: text
         }
 
         .nav-links {
             display: flex;
-            gap: 1.5rem;
             align-items: center;
+            gap: 1.5rem
         }
 
         .nav-link {
-            color: var(--text-secondary);
+            color: var(--clr-text-2);
             text-decoration: none;
             font-weight: 500;
             font-size: 0.9rem;
-            transition: color 0.3s ease;
+            transition: color 0.3s;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.4rem
         }
 
-        .nav-link:hover { color: var(--primary); }
+        .nav-link:hover {
+            color: var(--clr-accent)
+        }
 
         .nav-btn {
-            padding: 0.6rem 1.25rem;
-            background: var(--gradient-primary);
+            padding: 0.65rem 1.4rem;
+            background: var(--grad-main);
             border: none;
-            border-radius: 8px;
-            color: var(--darker-bg);
-            font-family: 'Exo 2', sans-serif;
+            border-radius: var(--radius-sm);
+            color: var(--clr-bg-deep);
+            font-family: var(--ff-body);
             font-weight: 600;
-            font-size: 0.9rem;
+            font-size: 0.88rem;
             cursor: pointer;
             text-decoration: none;
-            display: flex;
+            box-shadow: var(--shadow-btn);
+            transition: all 0.3s;
+            display: inline-flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.4rem
         }
 
-        /* Main Content */
-        .main-content {
-            padding: 100px 2rem 3rem;
-            max-width: 1600px;
+        .nav-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(108, 138, 255, 0.45)
+        }
+
+        .main {
+            max-width: 1400px;
             margin: 0 auto;
+            padding: 2rem 2rem 4rem
         }
 
-        /* Page Header */
-        .page-header {
+        /* Result Header */
+        .result-header {
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
             margin-bottom: 2rem;
             flex-wrap: wrap;
-            gap: 1.5rem;
+            gap: 1rem;
+            padding: 2rem 2.5rem;
+            background: var(--clr-bg-card);
+            border: 1px solid var(--clr-border);
+            border-radius: var(--radius-xl);
+            position: relative;
+            overflow: hidden
         }
 
-        .header-left {
-            display: flex;
-            align-items: center;
-            gap: 1.5rem;
+        .result-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--grad-main)
         }
 
-        .back-btn {
-            width: 50px;
-            height: 50px;
-            background: var(--card-bg);
-            border: 1px solid var(--border-glow);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--text-secondary);
-            text-decoration: none;
-            transition: all 0.3s ease;
-        }
-
-        .back-btn:hover {
-            border-color: var(--primary);
-            color: var(--primary);
-        }
-
-        .page-title {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 2rem;
+        .result-header-left h1 {
+            font-family: var(--ff-head);
+            font-size: clamp(1.4rem, 3vw, 1.8rem);
             font-weight: 700;
+            margin-bottom: 0.5rem
         }
 
-        .page-title .gradient {
-            background: var(--gradient-primary);
+        .result-header-left h1 .grad {
+            background: var(--grad-main);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            background-clip: text;
+            background-clip: text
         }
 
-        .experiment-id {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            margin-top: 0.25rem;
+        .result-question {
+            color: var(--clr-text-2);
+            font-size: 0.95rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+            line-height: 1.6;
+            max-width: 700px
         }
 
-        /* Status Badge */
+        .result-question i {
+            color: var(--clr-accent);
+            margin-top: 4px;
+            min-width: 16px
+        }
+
         .status-badge {
-            padding: 0.6rem 1.25rem;
-            border-radius: 50px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1px;
             display: inline-flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.4rem;
+            padding: 0.4rem 1rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.78rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.8px
         }
 
         .status-badge.completed {
-            background: rgba(0, 255, 136, 0.15);
-            color: var(--success);
-            border: 1px solid var(--success);
+            background: rgba(52, 211, 153, 0.12);
+            color: var(--clr-success);
+            border: 1px solid var(--clr-success)
         }
 
         .status-badge.processing {
-            background: rgba(255, 170, 0, 0.15);
-            color: var(--warning);
-            border: 1px solid var(--warning);
-        }
-
-        .status-badge.failed {
-            background: rgba(255, 51, 102, 0.15);
-            color: var(--danger);
-            border: 1px solid var(--danger);
+            background: rgba(108, 138, 255, 0.12);
+            color: var(--clr-accent);
+            border: 1px solid var(--clr-accent)
         }
 
         .status-badge.pending {
-            background: rgba(0, 240, 255, 0.15);
-            color: var(--primary);
-            border: 1px solid var(--primary);
+            background: rgba(251, 191, 36, 0.12);
+            color: var(--clr-warning);
+            border: 1px solid var(--clr-warning)
         }
 
-        /* Main Grid */
+        .status-badge.failed {
+            background: rgba(248, 113, 113, 0.12);
+            color: var(--clr-danger);
+            border: 1px solid var(--clr-danger)
+        }
+
+        /* Results Grid */
         .results-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 2rem;
+            gap: 1.5rem
         }
 
-        @media (max-width: 1200px) {
-            .results-grid { grid-template-columns: 1fr; }
+        .full-width {
+            grid-column: 1/-1
         }
 
-        /* Card Styles */
+        /* Result Card */
         .result-card {
-            background: var(--card-bg);
-            border: 1px solid var(--border-glow);
-            border-radius: 20px;
+            background: var(--clr-bg-card);
+            border: 1px solid var(--clr-border);
+            border-radius: var(--radius-lg);
             overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1)
+        }
+
+        .result-card:hover {
+            border-color: var(--clr-border-hi);
+            box-shadow: var(--shadow-card), 0 0 30px rgba(108, 138, 255, 0.08)
         }
 
         .card-header {
             padding: 1.25rem 1.5rem;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid var(--clr-border);
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            justify-content: space-between
         }
 
         .card-title {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1.1rem;
+            font-family: var(--ff-head);
+            font-size: 1rem;
             font-weight: 600;
             display: flex;
             align-items: center;
-            gap: 0.75rem;
+            gap: 0.6rem
         }
 
-        .card-title i { color: var(--primary); }
-
-        .card-body { padding: 1.5rem; }
-
-        /* Image Section */
-        .image-section { grid-column: 1 / -1; }
-
-        .image-container {
-            position: relative;
-            display: flex;
-            gap: 1.5rem;
-            flex-wrap: wrap;
+        .card-title i {
+            color: var(--clr-accent);
+            font-size: 1rem
         }
 
+        .card-body {
+            padding: 1.5rem
+        }
+
+        .answer-card .card-header {
+            background: var(--grad-subtle);
+            border-color: rgba(108, 138, 255, 0.25)
+        }
+
+        /* Image */
         .image-wrapper {
-            flex: 1;
-            min-width: 300px;
             position: relative;
+            max-height: 500px;
+            overflow: hidden;
+            background: linear-gradient(135deg, var(--clr-bg-deep), rgba(108, 138, 255, 0.03))
         }
 
-        .image-label {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.8rem;
-            color: var(--primary);
-            margin-bottom: 0.75rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .result-image {
+        .image-wrapper img {
             width: 100%;
-            border-radius: 12px;
-            border: 1px solid var(--border-glow);
+            display: block;
+            object-fit: contain;
+            max-height: 500px
         }
 
-        /* Canvas for object detection overlay */
-        .detection-canvas-container {
-            position: relative;
-            display: inline-block;
-            width: 100%;
-        }
-
-        .detection-canvas {
+        .image-wrapper canvas {
             position: absolute;
             top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            border-radius: 12px;
+            left: 0
         }
 
         /* Detection Controls */
         .detection-controls {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid var(--clr-border);
             display: flex;
-            gap: 0.75rem;
-            margin-top: 1rem;
-            flex-wrap: wrap;
+            gap: 0.5rem;
+            flex-wrap: wrap
         }
 
-        .detection-btn {
-            padding: 0.5rem 1rem;
-            background: var(--glass-bg);
-            border: 1px solid var(--border-glow);
-            border-radius: 8px;
-            color: var(--text-secondary);
-            font-size: 0.85rem;
+        .detect-btn {
+            padding: 0.45rem 0.85rem;
+            background: var(--clr-bg-glass);
+            border: 1px solid var(--clr-border);
+            border-radius: 6px;
+            color: var(--clr-text-2);
+            font-size: 0.78rem;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.3s;
+            font-family: var(--ff-body);
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.4rem
         }
 
-        .detection-btn:hover,
-        .detection-btn.active {
-            background: rgba(0, 240, 255, 0.1);
-            border-color: var(--primary);
-            color: var(--primary);
+        .detect-btn:hover,
+        .detect-btn.active {
+            background: rgba(108, 138, 255, 0.12);
+            border-color: var(--clr-accent);
+            color: var(--clr-accent)
         }
 
-        /* Object Detection Info */
-        .detection-info {
-            margin-top: 1.5rem;
-            padding: 1.25rem;
-            background: var(--glass-bg);
-            border: 1px solid var(--border-glow);
-            border-radius: 12px;
-        }
-
-        .detection-stats {
+        /* Quick Stats */
+        .quick-stats {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-            gap: 1rem;
+            grid-template-columns: repeat(3, 1fr);
+            border-top: 1px solid var(--clr-border)
         }
 
-        .detection-stat {
-            text-align: center;
+        .quick-stat {
             padding: 1rem;
-            background: rgba(0, 240, 255, 0.05);
-            border-radius: 10px;
+            text-align: center;
+            border-right: 1px solid var(--clr-border)
         }
 
-        .detection-stat-value {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1.75rem;
+        .quick-stat:last-child {
+            border-right: none
+        }
+
+        .quick-stat-val {
+            font-family: var(--ff-head);
+            font-size: 1.6rem;
             font-weight: 700;
-            background: var(--gradient-primary);
+            background: var(--grad-main);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            background-clip: text;
+            background-clip: text
         }
 
-        .detection-stat-label {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            margin-top: 0.25rem;
+        .quick-stat-lbl {
+            font-size: 0.72rem;
+            color: var(--clr-text-3);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-top: 0.25rem
         }
 
         /* Objects List */
-        .objects-list {
-            margin-top: 1.5rem;
-        }
-
-        .objects-list-header {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 0.95rem;
-            color: var(--text-secondary);
-            margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
         .object-item {
             display: flex;
             align-items: center;
-            gap: 1rem;
-            padding: 0.75rem 1rem;
-            background: var(--glass-bg);
-            border: 1px solid var(--border-glow);
-            border-radius: 10px;
-            margin-bottom: 0.5rem;
-            transition: all 0.3s ease;
+            gap: 0.75rem;
+            padding: 0.65rem 0;
+            border-bottom: 1px solid rgba(99, 130, 255, 0.06)
         }
 
-        .object-item:hover {
-            border-color: var(--primary);
-            background: rgba(0, 240, 255, 0.05);
+        .object-item:last-child {
+            border-bottom: none
         }
 
         .object-color {
-            width: 12px;
-            height: 12px;
-            border-radius: 3px;
-            flex-shrink: 0;
+            width: 14px;
+            height: 14px;
+            border-radius: 4px;
+            flex-shrink: 0
         }
 
         .object-name {
-            font-weight: 500;
-            flex: 1;
+            font-size: 0.88rem;
+            font-weight: 500
         }
 
         .object-details {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--clr-text-3);
+            font-family: var(--ff-mono);
+            margin-left: auto
         }
 
-        /* Question Card */
-        .question-text {
-            font-size: 1.15rem;
-            line-height: 1.7;
-            color: var(--text-primary);
-            padding: 1.5rem;
-            background: var(--glass-bg);
-            border-radius: 12px;
-            border-left: 4px solid var(--primary);
-        }
-
-        /* Quantum Vector Visualization */
-        .vector-container {
-            padding: 1.5rem;
-        }
-
+        /* Vector Chart */
         .vector-chart {
             display: flex;
             align-items: flex-end;
-            justify-content: space-around;
+            justify-content: center;
             height: 200px;
-            padding: 1rem;
-            background: var(--glass-bg);
-            border-radius: 12px;
-            gap: 0.5rem;
+            gap: 0.55rem;
+            padding: 1rem 0;
+            position: relative
         }
 
-        .vector-bar-container {
-            flex: 1;
+        .vector-bar-wrap {
             display: flex;
             flex-direction: column;
             align-items: center;
-            height: 100%;
+            gap: 0.3rem;
+            flex: 1;
+            max-width: 60px
         }
 
         .vector-bar {
             width: 100%;
-            max-width: 50px;
-            border-radius: 6px 6px 0 0;
-            transition: all 0.5s ease;
-            position: relative;
-            min-height: 5px;
+            min-height: 4px;
+            border-radius: 4px 4px 0 0;
+            transition: height 1s cubic-bezier(0.34, 1.56, 0.64, 1)
         }
 
         .vector-bar.positive {
-            background: linear-gradient(180deg, var(--primary), var(--secondary));
-            align-self: flex-end;
+            background: var(--grad-main)
         }
 
         .vector-bar.negative {
-            background: linear-gradient(180deg, var(--danger), var(--accent));
-            align-self: flex-start;
-            border-radius: 0 0 6px 6px;
+            background: linear-gradient(135deg, var(--clr-danger), var(--clr-accent3))
         }
 
-        .vector-value {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.7rem;
-            color: var(--text-muted);
-            margin-top: 0.5rem;
+        .vector-val {
+            font-size: 0.68rem;
+            color: var(--clr-text-3);
+            font-family: var(--ff-mono)
         }
 
-        .vector-label {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.75rem;
-            color: var(--text-secondary);
-            margin-top: 0.25rem;
-        }
-
-        /* Vision Analysis */
-        .analysis-text {
-            font-size: 1rem;
-            line-height: 1.8;
-            color: var(--text-secondary);
-            white-space: pre-wrap;
-        }
-
-        /* AI Answer */
-        .answer-section {
-            grid-column: 1 / -1;
-        }
-
-        .answer-text {
-            font-size: 1.1rem;
-            line-height: 1.9;
-            color: var(--text-primary);
-            white-space: pre-wrap;
-        }
-
-        .answer-text p {
-            margin-bottom: 1rem;
-        }
-
-        /* Error Message */
-        .error-message {
-            padding: 1.5rem;
-            background: rgba(255, 51, 102, 0.1);
-            border: 1px solid var(--danger);
-            border-radius: 12px;
-            color: var(--danger);
-            display: flex;
-            align-items: flex-start;
-            gap: 1rem;
-        }
-
-        .error-message i {
-            font-size: 1.5rem;
+        .vector-lbl {
+            font-size: 0.72rem;
+            color: var(--clr-accent);
+            font-family: var(--ff-mono);
+            font-weight: 500
         }
 
         /* Metadata */
         .metadata-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 0.75rem
         }
 
         .metadata-item {
-            padding: 1rem;
-            background: var(--glass-bg);
-            border-radius: 10px;
+            padding: 0.9rem;
+            background: var(--clr-bg-glass);
+            border: 1px solid rgba(99, 130, 255, 0.08);
+            border-radius: var(--radius-sm);
+            transition: border-color 0.3s
+        }
+
+        .metadata-item:hover {
+            border-color: var(--clr-border-hi)
         }
 
         .metadata-label {
-            font-size: 0.8rem;
-            color: var(--text-muted);
+            font-size: 0.73rem;
+            color: var(--clr-text-3);
             text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 0.5rem;
+            letter-spacing: 0.6px;
+            margin-bottom: 0.3rem
         }
 
         .metadata-value {
-            font-size: 1rem;
-            color: var(--text-primary);
+            font-family: var(--ff-mono);
+            font-size: 0.88rem;
+            font-weight: 500;
+            color: var(--clr-text);
+            word-break: break-all
         }
 
-        /* Actions */
-        .actions-bar {
-            grid-column: 1 / -1;
+        /* Analysis / Answer */
+        .analysis-text {
+            color: var(--clr-text-2);
+            line-height: 1.8;
+            font-size: 0.94rem
+        }
+
+        .answer-text {
+            color: var(--clr-text);
+            line-height: 1.8;
+            font-size: 0.96rem
+        }
+
+        .answer-text p {
+            margin-bottom: 0.8rem
+        }
+
+        /* Error */
+        .error-box {
             display: flex;
-            justify-content: center;
-            gap: 1rem;
+            align-items: flex-start;
+            gap: 0.85rem;
+            padding: 1.25rem;
+            background: rgba(248, 113, 113, 0.08);
+            border: 1px solid rgba(248, 113, 113, 0.2);
+            border-radius: var(--radius-sm);
+            color: var(--clr-danger);
+            font-size: 0.9rem;
+            line-height: 1.65
+        }
+
+        .error-box i {
+            font-size: 1.2rem;
+            margin-top: 2px
+        }
+
+        /* Actions Bar */
+        .actions-bar {
+            display: flex;
+            gap: 0.75rem;
             flex-wrap: wrap;
-            margin-top: 1rem;
+            margin-top: 2.25rem;
+            justify-content: center;
+            padding: 1.5rem 0
         }
 
         .action-btn {
-            padding: 0.75rem 1.5rem;
-            border-radius: 10px;
-            font-family: 'Exo 2', sans-serif;
-            font-weight: 600;
-            font-size: 0.95rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
+            padding: 0.75rem 1.6rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.88rem;
+            font-weight: 500;
             text-decoration: none;
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
+            transition: all 0.3s;
+            cursor: pointer;
             border: none;
+            font-family: var(--ff-body)
         }
 
         .action-btn.primary {
-            background: var(--gradient-primary);
-            color: var(--darker-bg);
+            background: var(--grad-main);
+            color: var(--clr-bg-deep);
+            box-shadow: var(--shadow-btn)
+        }
+
+        .action-btn.primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 40px rgba(108, 138, 255, 0.5)
         }
 
         .action-btn.secondary {
-            background: var(--card-bg);
-            color: var(--text-primary);
-            border: 1px solid var(--border-glow);
+            background: var(--clr-bg-glass);
+            color: var(--clr-text);
+            border: 1px solid var(--clr-border)
+        }
+
+        .action-btn.secondary:hover {
+            border-color: var(--clr-accent);
+            color: var(--clr-accent);
+            transform: translateY(-3px)
         }
 
         .action-btn.danger {
-            background: rgba(255, 51, 102, 0.1);
-            color: var(--danger);
-            border: 1px solid var(--danger);
+            background: rgba(248, 113, 113, 0.1);
+            color: var(--clr-danger);
+            border: 1px solid rgba(248, 113, 113, 0.2)
         }
 
-        .action-btn:hover {
-            transform: translateY(-2px);
+        .action-btn.danger:hover {
+            background: rgba(248, 113, 113, 0.18);
+            transform: translateY(-3px)
         }
 
-        /* Responsive */
-        @media (max-width: 768px) {
-            .nav { padding: 0.75rem 1rem; }
-            .nav-links { display: none; }
-            .main-content { padding: 80px 1rem 2rem; }
-            .page-title { font-size: 1.5rem; }
-            .results-grid { grid-template-columns: 1fr; }
-            .image-container { flex-direction: column; }
+        .reveal {
+            opacity: 1;
+            transform: none;
+            transition: opacity 0.6s cubic-bezier(0.23, 1, 0.32, 1), transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+            visibility: visible !important
         }
 
-        /* Scrollbar */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: var(--darker-bg); }
+        /* Only hide if JS is confirmed working and we want scroll effects */
+        body.js-animate .reveal:not(.revealed) {
+            opacity: 0;
+            transform: translateY(20px)
+        }
+
+        .reveal.revealed {
+            opacity: 1;
+            transform: translateY(0)
+        }
+
+        @media(max-width:1024px) {
+            .results-grid {
+                grid-template-columns: 1fr
+            }
+        }
+
+        @media(max-width:768px) {
+            .nav {
+                padding: 0.75rem 1rem
+            }
+
+            .main {
+                padding: 1.5rem 1rem 3rem
+            }
+
+            .result-header {
+                padding: 1.5rem
+            }
+
+            .metadata-grid {
+                grid-template-columns: 1fr 1fr
+            }
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--clr-bg-deep)
+        }
+
         ::-webkit-scrollbar-thumb {
-            background: var(--gradient-primary);
-            border-radius: 4px;
+            background: linear-gradient(180deg, var(--clr-accent), var(--clr-accent2));
+            border-radius: 4px
         }
 
-        /* Loading Animation */
-        .loading-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(5, 5, 16, 0.9);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 2000;
-        }
-
-        .loading-spinner {
-            width: 60px;
-            height: 60px;
-            border: 3px solid var(--border-glow);
-            border-top-color: var(--primary);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        .loading-text {
-            margin-top: 1.5rem;
-            font-family: 'Orbitron', sans-serif;
-            color: var(--primary);
+        ::selection {
+            background: rgba(108, 138, 255, 0.3);
+            color: var(--clr-text)
         }
     </style>
 </head>
-<body>
-    <div class="bg-animation"></div>
 
-    <!-- Navigation -->
+<body>
+    <div class="bg-orbs" id="bgOrbs"></div>
+    <div class="bg-mesh"></div>
+
     <nav class="nav">
         <a href="{% url 'landing' %}" class="logo">
             <div class="logo-icon"><i class="fas fa-atom"></i></div>
             <span class="logo-text">Q-FuseVision</span>
         </a>
         <div class="nav-links">
-            <a href="{% url 'landing' %}" class="nav-link"><i class="fas fa-home"></i> Home</a>
-            <a href="{% url 'dashboard' %}" class="nav-link"><i class="fas fa-chart-line"></i> Dashboard</a>
+            <a href="{% url 'dashboard' %}" class="nav-link"><i class="fas fa-th-large"></i> Dashboard</a>
             <a href="{% url 'upload' %}" class="nav-btn"><i class="fas fa-plus"></i> New Experiment</a>
         </div>
     </nav>
 
-    <!-- Main Content -->
-    <div class="main-content">
-        <!-- Page Header -->
-        <div class="page-header">
-            <div class="header-left">
-                <a href="{% url 'dashboard' %}" class="back-btn">
-                    <i class="fas fa-arrow-left"></i>
-                </a>
-                <div>
-                    <h1 class="page-title">
-                        <span class="gradient">Experiment Results</span>
-                    </h1>
-                    <div class="experiment-id">ID: #{{ experiment.pk }} | {{ experiment.created_at|date:"F d, Y H:i" }}</div>
+    <div class="main">
+        <!-- Header -->
+        <div class="result-header reveal">
+            <div class="result-header-left">
+                <h1><span class="grad">Experiment</span> #{{ experiment.pk }}</h1>
+                <div class="result-question">
+                    <i class="fas fa-question-circle"></i>
+                    <span>{{ experiment.question }}</span>
                 </div>
             </div>
-            <div class="status-badge {{ experiment.status }}">
-                {% if experiment.status == 'completed' %}
-                    <i class="fas fa-check-circle"></i>
-                {% elif experiment.status == 'processing' %}
-                    <i class="fas fa-spinner fa-spin"></i>
-                {% elif experiment.status == 'failed' %}
-                    <i class="fas fa-times-circle"></i>
-                {% else %}
-                    <i class="fas fa-clock"></i>
-                {% endif %}
-                {{ experiment.status }}
-            </div>
+            <span class="status-badge {{ experiment.status }}">
+                <i
+                    class="fas {% if experiment.status == 'completed' %}fa-check-circle{% elif experiment.status == 'processing' %}fa-spinner fa-spin{% elif experiment.status == 'pending' %}fa-clock{% else %}fa-exclamation-circle{% endif %}"></i>
+                {{ experiment.get_status_display }}
+            </span>
         </div>
 
         <div class="results-grid">
-            <!-- Image Section with Object Detection -->
-            <div class="result-card image-section">
+
+            <!-- ====== IMAGE & DETECTION ====== -->
+            <div class="result-card">
                 <div class="card-header">
-                    <h2 class="card-title">
-                        <i class="fas fa-image"></i>
-                        Image Analysis with Object Detection
-                    </h2>
+                    <h2 class="card-title"><i class="fas fa-image"></i> Image Analysis</h2>
                 </div>
-                <div class="card-body">
-                    <div class="image-container">
-                        <div class="image-wrapper">
-                            <div class="image-label">
-                                <i class="fas fa-image"></i> Original Image
-                            </div>
-                            <div class="detection-canvas-container">
-                                <img src="{{ experiment.image.url }}" alt="Original" class="result-image" id="originalImage">
-                                <canvas id="detectionCanvas" class="detection-canvas"></canvas>
-                            </div>
-                        </div>
+                <div class="image-wrapper">
+                    {% if experiment.image %}
+                    <img src="{{ experiment.image.url }}" alt="Experiment Image" id="originalImage"
+                        crossorigin="anonymous">
+                    <canvas id="detectionCanvas"></canvas>
+                    {% else %}
+                    <div style="padding:4rem;text-align:center;color:var(--clr-text-3)">
+                        <i class="fas fa-image" style="font-size:3rem;margin-bottom:1rem;display:block"></i>
+                        No image available
                     </div>
-
-                    <!-- Detection Controls -->
-                    <div class="detection-controls">
-                        <button class="detection-btn active" id="toggleBoxes" onclick="toggleBoundingBoxes()">
-                            <i class="fas fa-vector-square"></i> Bounding Boxes
-                        </button>
-                        <button class="detection-btn active" id="toggleCenters" onclick="toggleCenters()">
-                            <i class="fas fa-crosshairs"></i> Center Points
-                        </button>
-                        <button class="detection-btn active" id="toggleLabels" onclick="toggleLabels()">
-                            <i class="fas fa-tag"></i> Labels
-                        </button>
-                        <button class="detection-btn" id="toggleEdges" onclick="toggleEdges()">
-                            <i class="fas fa-draw-polygon"></i> Edge Outlines
-                        </button>
+                    {% endif %}
+                </div>
+                <div class="detection-controls">
+                    <button class="detect-btn active" id="toggleBoxes" onclick="toggleBoundingBoxes()"><i
+                            class="fas fa-vector-square"></i> Boxes</button>
+                    <button class="detect-btn active" id="toggleCenters" onclick="toggleCenters()"><i
+                            class="fas fa-crosshairs"></i> Centers</button>
+                    <button class="detect-btn active" id="toggleLabels" onclick="toggleLabels()"><i
+                            class="fas fa-tag"></i> Labels</button>
+                    <button class="detect-btn" id="toggleEdges" onclick="toggleEdges()"><i
+                            class="fas fa-border-style"></i> Edges</button>
+                </div>
+                <div class="quick-stats">
+                    <div class="quick-stat">
+                        <div class="quick-stat-val" id="objectCount">0</div>
+                        <div class="quick-stat-lbl">Objects</div>
                     </div>
-
-                    <!-- Detection Stats -->
-                    <div class="detection-info">
-                        <div class="detection-stats" id="detectionStats">
-                            <div class="detection-stat">
-                                <div class="detection-stat-value" id="objectCount">0</div>
-                                <div class="detection-stat-label">Objects Detected</div>
-                            </div>
-                            <div class="detection-stat">
-                                <div class="detection-stat-value" id="anomalyCount">0</div>
-                                <div class="detection-stat-label">Anomaly Regions</div>
-                            </div>
-                            <div class="detection-stat">
-                                <div class="detection-stat-value" id="depthLayers">3</div>
-                                <div class="detection-stat-label">Depth Layers</div>
-                            </div>
-                            <div class="detection-stat">
-                                <div class="detection-stat-value">8D</div>
-                                <div class="detection-stat-label">Quantum Vector</div>
-                            </div>
-                        </div>
+                    <div class="quick-stat">
+                        <div class="quick-stat-val" id="anomalyCount">0</div>
+                        <div class="quick-stat-lbl">Anomalies</div>
                     </div>
-
-                    <!-- Objects List -->
-                    <div class="objects-list" id="objectsList">
-                        <div class="objects-list-header">
-                            <i class="fas fa-list"></i> Detected Objects
-                        </div>
-                        <!-- Objects will be populated by JavaScript -->
+                    <div class="quick-stat">
+                        <div class="quick-stat-val" id="depthLayers">0</div>
+                        <div class="quick-stat-lbl">Depth Layers</div>
                     </div>
                 </div>
             </div>
 
-            <!-- Question Card -->
-            <div class="result-card">
+            <!-- ====== DETECTED OBJECTS LIST ====== -->
+            <div class="result-card reveal">
                 <div class="card-header">
-                    <h2 class="card-title">
-                        <i class="fas fa-question-circle"></i>
-                        Your Question
-                    </h2>
+                    <h2 class="card-title"><i class="fas fa-list-ul"></i> Detected Objects</h2>
                 </div>
-                <div class="card-body">
-                    <div class="question-text">{{ experiment.question }}</div>
+                <div class="card-body" id="objectsList">
+                    <p style="color:var(--clr-text-3);text-align:center;padding:2rem 0">
+                        <i class="fas fa-spinner fa-spin" style="margin-right:0.5rem"></i>Loading detection data...
+                    </p>
                 </div>
             </div>
 
-            <!-- Quantum Vector Visualization -->
-            <div class="result-card">
+            <!-- ====== QUANTUM FUSION VECTOR ====== -->
+            <div class="result-card reveal">
                 <div class="card-header">
-                    <h2 class="card-title">
-                        <i class="fas fa-atom"></i>
-                        Quantum Fusion Vector
-                    </h2>
+                    <h2 class="card-title"><i class="fas fa-atom"></i> Quantum Fusion Vector</h2>
+                    <span style="font-size:0.78rem;color:var(--clr-text-3);font-family:var(--ff-mono)">{{
+                        vector_list|length }}D</span>
                 </div>
-                <div class="vector-container">
+                <div class="card-body">
                     <div class="vector-chart" id="vectorChart">
                         {% for value in vector_list %}
-                        <div class="vector-bar-container">
-                            <div class="vector-bar {% if value >= 0 %}positive{% else %}negative{% endif %}" 
-                                 style="height: {{ value|floatformat:2|slice:'1:'|default:'50' }}%;"
-                                 data-value="{{ value|floatformat:4 }}">
-                            </div>
-                            <div class="vector-value">{{ value|floatformat:2 }}</div>
-                            <div class="vector-label">Q{{ forloop.counter0 }}</div>
+                        <div class="vector-bar-wrap">
+                            <div class="vector-bar {% if value >= 0 %}positive{% else %}negative{% endif %}"
+                                style="height:5%" data-value="{{ value|floatformat:4 }}"></div>
+                            <div class="vector-val">{{ value|floatformat:2 }}</div>
+                            <div class="vector-lbl">Q{{ forloop.counter0 }}</div>
                         </div>
                         {% empty %}
-                        <p style="color: var(--text-muted); text-align: center; width: 100%;">No vector data available</p>
+                        <p style="color:var(--clr-text-3);text-align:center;width:100%">No vector data available</p>
                         {% endfor %}
                     </div>
                 </div>
             </div>
 
-            <!-- Quantum Diagnostics (Phase 2) -->
+            <!-- ====== QUANTUM DIAGNOSTICS ====== -->
             {% if quantum_meta or entanglement_report or circuit_analysis or fusion_settings %}
-            <div class="result-card">
+            <div class="result-card reveal">
                 <div class="card-header">
-                    <h2 class="card-title">
-                        <i class="fas fa-microchip"></i>
-                        Quantum Diagnostics
-                    </h2>
+                    <h2 class="card-title"><i class="fas fa-microchip"></i> Quantum Diagnostics</h2>
                 </div>
                 <div class="card-body">
                     <div class="metadata-grid">
@@ -842,7 +850,8 @@
                         </div>
                         <div class="metadata-item">
                             <div class="metadata-label">Latency</div>
-                            <div class="metadata-value">{{ quantum_meta.last_forward_ms|floatformat:2 }} ms</div>
+                            <div class="metadata-value">{{ quantum_meta.last_forward_ms|floatformat:2|default:"-" }} ms
+                            </div>
                         </div>
                         <div class="metadata-item">
                             <div class="metadata-label">Parameters</div>
@@ -851,6 +860,10 @@
                         {% endif %}
 
                         {% if fusion_settings %}
+                        <div class="metadata-item">
+                            <div class="metadata-label">Fusion Type</div>
+                            <div class="metadata-value">{{ fusion_settings.FUSION_TYPE|default:"-" }}</div>
+                        </div>
                         <div class="metadata-item">
                             <div class="metadata-label">Topology</div>
                             <div class="metadata-value">{{ fusion_settings.VQC_ENTANGLE_TOPOLOGY|default:"-" }}</div>
@@ -871,7 +884,7 @@
 
                         {% if entanglement_report %}
                         <div class="metadata-item">
-                            <div class="metadata-label">Entanglement S(ρA)</div>
+                            <div class="metadata-label">Von Neumann S(ρA)</div>
                             <div class="metadata-value">{{ entanglement_report.von_neumann_entropy|default:"-" }}</div>
                         </div>
                         <div class="metadata-item">
@@ -879,7 +892,7 @@
                             <div class="metadata-value">{{ entanglement_report.normalised_entropy|default:"-" }}</div>
                         </div>
                         <div class="metadata-item">
-                            <div class="metadata-label">Mutual Info (proxy)</div>
+                            <div class="metadata-label">Mutual Info</div>
                             <div class="metadata-value">{{ entanglement_report.mutual_information|default:"-" }}</div>
                         </div>
                         <div class="metadata-item">
@@ -891,15 +904,18 @@
                         {% if circuit_analysis %}
                         <div class="metadata-item">
                             <div class="metadata-label">Gate Count</div>
-                            <div class="metadata-value">{{ circuit_analysis.gate_analysis.total_gates|default:"-" }}</div>
+                            <div class="metadata-value">{{ circuit_analysis.gate_analysis.total_gates|default:"-" }}
+                            </div>
                         </div>
                         <div class="metadata-item">
                             <div class="metadata-label">CNOT Count</div>
-                            <div class="metadata-value">{{ circuit_analysis.gate_analysis.cnot_count|default:"-" }}</div>
+                            <div class="metadata-value">{{ circuit_analysis.gate_analysis.cnot_count|default:"-" }}
+                            </div>
                         </div>
                         <div class="metadata-item">
-                            <div class="metadata-label">Depth Estimate</div>
-                            <div class="metadata-value">{{ circuit_analysis.gate_analysis.depth_estimate|default:"-" }}</div>
+                            <div class="metadata-label">Depth</div>
+                            <div class="metadata-value">{{ circuit_analysis.gate_analysis.depth_estimate|default:"-" }}
+                            </div>
                         </div>
                         {% endif %}
                     </div>
@@ -907,29 +923,23 @@
             </div>
             {% endif %}
 
-            <!-- Vision Analysis -->
+            <!-- ====== VISION ANALYSIS ====== -->
             {% if experiment.vision_analysis %}
-            <div class="result-card">
+            <div class="result-card reveal">
                 <div class="card-header">
-                    <h2 class="card-title">
-                        <i class="fas fa-eye"></i>
-                        LLaVA Vision Analysis
-                    </h2>
+                    <h2 class="card-title"><i class="fas fa-eye"></i> LLaVA Vision Analysis</h2>
                 </div>
                 <div class="card-body">
-                    <div class="analysis-text">{{ experiment.vision_analysis }}</div>
+                    <div class="analysis-text">{{ experiment.vision_analysis|linebreaks }}</div>
                 </div>
             </div>
             {% endif %}
 
-            <!-- AI Answer -->
+            <!-- ====== AI ANSWER ====== -->
             {% if experiment.ollama_answer %}
-            <div class="result-card answer-section">
+            <div class="result-card answer-card reveal">
                 <div class="card-header">
-                    <h2 class="card-title">
-                        <i class="fas fa-brain"></i>
-                        AI Analysis & Answer
-                    </h2>
+                    <h2 class="card-title"><i class="fas fa-brain"></i> AI Analysis & Answer</h2>
                 </div>
                 <div class="card-body">
                     <div class="answer-text">{{ experiment.ollama_answer|linebreaks }}</div>
@@ -937,34 +947,32 @@
             </div>
             {% endif %}
 
-            <!-- Error Message -->
+            <!-- ====== ERROR ====== -->
             {% if experiment.error_message %}
-            <div class="result-card">
+            <div class="result-card full-width reveal">
                 <div class="card-header">
-                    <h2 class="card-title">
-                        <i class="fas fa-exclamation-triangle"></i>
-                        Error Details
-                    </h2>
+                    <h2 class="card-title"><i class="fas fa-exclamation-triangle" style="color:var(--clr-danger)"></i>
+                        Error Details</h2>
                 </div>
                 <div class="card-body">
-                    <div class="error-message">
-                        <i class="fas fa-bug"></i>
+                    <div class="error-box"><i class="fas fa-bug"></i>
                         <div>{{ experiment.error_message }}</div>
                     </div>
                 </div>
             </div>
             {% endif %}
 
-            <!-- Metadata -->
-            <div class="result-card" style="grid-column: 1 / -1;">
+            <!-- ====== METADATA ====== -->
+            <div class="result-card full-width reveal">
                 <div class="card-header">
-                    <h2 class="card-title">
-                        <i class="fas fa-info-circle"></i>
-                        Experiment Metadata
-                    </h2>
+                    <h2 class="card-title"><i class="fas fa-info-circle"></i> Experiment Metadata</h2>
                 </div>
                 <div class="card-body">
                     <div class="metadata-grid">
+                        <div class="metadata-item">
+                            <div class="metadata-label">Experiment ID</div>
+                            <div class="metadata-value">#{{ experiment.pk }}</div>
+                        </div>
                         <div class="metadata-item">
                             <div class="metadata-label">Created</div>
                             <div class="metadata-value">{{ experiment.created_at|date:"M d, Y H:i:s" }}</div>
@@ -975,103 +983,157 @@
                         </div>
                         <div class="metadata-item">
                             <div class="metadata-label">Status</div>
-                            <div class="metadata-value" style="text-transform: capitalize;">{{ experiment.status }}</div>
+                            <div class="metadata-value" style="text-transform:capitalize">{{
+                                experiment.get_status_display }}</div>
                         </div>
                         <div class="metadata-item">
-                            <div class="metadata-label">Vector Dimensions</div>
-                            <div class="metadata-value">{{ vector_list|length|default:"8" }}D</div>
+                            <div class="metadata-label">Vector Dim</div>
+                            <div class="metadata-value">{{ vector_list|length }}D</div>
                         </div>
+                        {% if experiment.user %}
+                        <div class="metadata-item">
+                            <div class="metadata-label">User</div>
+                            <div class="metadata-value">{{ experiment.user.username }}</div>
+                        </div>
+                        {% endif %}
                     </div>
                 </div>
             </div>
+        </div>
 
-            <!-- Actions -->
-            <div class="actions-bar">
-                <a href="{% url 'upload' %}" class="action-btn primary">
-                    <i class="fas fa-plus"></i> New Experiment
-                </a>
-                <a href="{% url 'dashboard' %}" class="action-btn secondary">
-                    <i class="fas fa-th-large"></i> Dashboard
-                </a>
-                <form action="{% url 'delete_experiment' experiment.pk %}" method="post" style="display: inline;">
-                    {% csrf_token %}
-                    <button type="submit" class="action-btn danger" onclick="return confirm('Are you sure you want to delete this experiment?');">
-                        <i class="fas fa-trash"></i> Delete
-                    </button>
-                </form>
-            </div>
+        <!-- Actions -->
+        <div class="actions-bar">
+            <a href="{% url 'upload' %}" class="action-btn primary"><i class="fas fa-plus"></i> New Experiment</a>
+            <a href="{% url 'dashboard' %}" class="action-btn secondary"><i class="fas fa-th-large"></i> Dashboard</a>
+            <form action="{% url 'delete_experiment' experiment.pk %}" method="post" style="display:inline">
+                {% csrf_token %}
+                <button type="submit" class="action-btn danger"
+                    onclick="return confirm('Are you sure you want to delete this experiment?');">
+                    <i class="fas fa-trash"></i> Delete
+                </button>
+            </form>
         </div>
     </div>
 
     <script>
-        // Object detection visualization
+        /* ======== Visibility Fix ======== */
+        (function () {
+            // Only enable animations if observer is supported
+            if ('IntersectionObserver' in window) {
+                document.body.classList.add('js-animate');
+            }
+            
+            // Force reveal everything after 2s just in case
+            setTimeout(() => {
+                document.querySelectorAll('.reveal').forEach(el => el.classList.add('revealed'));
+            }, 2000);
+        })();
+
+        /* ======== Background Orbs ======== */
+        try {
+            (function () {
+                const c = document.getElementById('bgOrbs');
+                if (!c) return;
+                const cols = ['rgba(108,138,255,0.1)', 'rgba(168,85,247,0.08)', 'rgba(244,114,182,0.06)'];
+                for (let i = 0; i < 4; i++) {
+                    const o = document.createElement('div'); const s = 100 + Math.random() * 250;
+                    o.style.cssText = `position:absolute;width:${s}px;height:${s}px;border-radius:50%;background:${cols[i % cols.length]};filter:blur(${50 + Math.random() * 40}px);left:${Math.random() * 100}%;top:${Math.random() * 100}%;animation:orbFloat${i % 3} ${20 + Math.random() * 15}s ease-in-out infinite;animation-delay:${-Math.random() * 10}s;pointer-events:none`;
+                    c.appendChild(o)
+                }
+            })();
+        } catch (e) { console.error("Orb error:", e); }
+
+        /* ======== Scroll Reveal ======== */
+        (function () {
+            try {
+                const obs = new IntersectionObserver(entries => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting || entry.intersectionRatio > 0) {
+                            entry.target.classList.add('revealed');
+                            obs.unobserve(entry.target);
+                        }
+                    });
+                }, { threshold: 0.1 });
+
+                document.querySelectorAll('.reveal').forEach((el, i) => {
+                    el.style.transitionDelay = `${i * 0.06}s`;
+                    obs.observe(el);
+                    // Also check if already in view
+                    const rect = el.getBoundingClientRect();
+                    if (rect.top < window.innerHeight && rect.bottom >= 0) {
+                        el.classList.add('revealed');
+                    }
+                });
+            } catch (e) {
+                console.error("Observer error:", e);
+                document.querySelectorAll('.reveal').forEach(el => el.classList.add('revealed'));
+            }
+        })();
+
+        /* ======== Object Detection Canvas ======== */
         const canvas = document.getElementById('detectionCanvas');
-        const ctx = canvas.getContext('2d');
+        const ctx = canvas ? canvas.getContext('2d') : null;
         const image = document.getElementById('originalImage');
-        
-        // Detection display states
-        let showBoxes = true;
-        let showCenters = true;
-        let showLabels = true;
-        let showEdges = false;
-
-        // Colors for objects
-        const colors = ['#00f0ff', '#ff00aa', '#00ff88', '#ffaa00', '#bf00ff', '#ff3366'];
-
-        // Sample detected objects (will be populated from advanced_analysis)
+        let showBoxes = true, showCenters = true, showLabels = true, showEdges = false;
+        const COLORS = ['#6c8aff', '#f472b6', '#34d399', '#fbbf24', '#a855f7', '#f87171', '#2dd4bf', '#818cf8'];
         let detectedObjects = [];
 
-        // Parse advanced analysis if available
-        {% if experiment.advanced_analysis %}
-        try {
-            const analysisData = {{ experiment.advanced_analysis|safe }};
-            if (analysisData && analysisData.detected_objects) {
-                detectedObjects = analysisData.detected_objects;
-                document.getElementById('objectCount').textContent = analysisData.num_objects || 0;
-                
-                if (analysisData.anomaly_analysis) {
-                    document.getElementById('anomalyCount').textContent = analysisData.anomaly_analysis.num_anomalies || 0;
-                }
-                
-                if (analysisData.depth_estimation) {
-                    const foreground = analysisData.depth_estimation.filter(d => d.relative_depth < 0.3).length;
-                    const midground = analysisData.depth_estimation.filter(d => d.relative_depth >= 0.3 && d.relative_depth <= 0.7).length;
-                    const background = analysisData.depth_estimation.filter(d => d.relative_depth > 0.7).length;
-                    document.getElementById('depthLayers').textContent = (foreground > 0 ? 1 : 0) + (midground > 0 ? 1 : 0) + (background > 0 ? 1 : 0);
-                }
-            }
-        } catch (e) {
-            console.log('No advanced analysis data available');
+        /* Try to load from API first, then fall back to inline JSON */
+        function loadDetectionData() {
+            fetch('{% url "api_detection_data" experiment.pk %}')
+                .then(r => r.json())
+                .then(data => {
+                    if (data.objects && data.objects.length > 0) {
+                        detectedObjects = data.objects;
+                    } else {
+                        loadFromInlineData();
+                    }
+                    afterLoad();
+                })
+                .catch(() => {
+                    loadFromInlineData();
+                    afterLoad();
+                });
         }
+
+        function loadFromInlineData() {
+            {% if experiment.advanced_analysis %}
+            try {
+                const raw = {{ experiment.advanced_analysis| safe
+            }};
+        if (raw && raw.detected_objects) {
+            detectedObjects = raw.detected_objects;
+        }
+            } catch (e) { console.log('Could not parse inline advanced_analysis:', e); }
+        {% endif %}
+        }
+
+        function afterLoad() {
+            document.getElementById('objectCount').textContent = detectedObjects.length;
+            /* anomaly + depth counters */
+            {% if experiment.advanced_analysis %}
+            try {
+                const raw = {{ experiment.advanced_analysis| safe
+            }};
+        if (raw.anomaly_analysis) document.getElementById('anomalyCount').textContent = raw.anomaly_analysis.num_anomalies || 0;
+        if (raw.depth_estimation) {
+            const fg = raw.depth_estimation.filter(d => d.relative_depth < 0.3).length;
+            const mg = raw.depth_estimation.filter(d => d.relative_depth >= 0.3 && d.relative_depth <= 0.7).length;
+            const bg = raw.depth_estimation.filter(d => d.relative_depth > 0.7).length;
+            document.getElementById('depthLayers').textContent = (fg > 0 ? 1 : 0) + (mg > 0 ? 1 : 0) + (bg > 0 ? 1 : 0);
+        }
+            } catch (e) { }
         {% endif %}
 
-        // If no objects from analysis, create demo objects
-        if (detectedObjects.length === 0) {
-            // Create some demo objects based on image dimensions
-            detectedObjects = [
-                { id: 1, bounding_box: { x: 50, y: 50, width: 150, height: 120 }, center_px: [125, 110], area: 18000, circularity: 0.7 },
-                { id: 2, bounding_box: { x: 250, y: 80, width: 100, height: 180 }, center_px: [300, 170], area: 18000, circularity: 0.5 },
-                { id: 3, bounding_box: { x: 150, y: 200, width: 200, height: 100 }, center_px: [250, 250], area: 20000, circularity: 0.6 }
-            ];
-            document.getElementById('objectCount').textContent = detectedObjects.length;
+        if (image && canvas) {
+            if (image.complete) { initCanvas(); drawDetections(); }
+            else { image.onload = function () { initCanvas(); drawDetections(); }; }
         }
-
-        // Wait for image to load then draw
-        image.onload = function() {
-            initCanvas();
-            drawDetections();
-            populateObjectsList();
-        };
-
-        // If image already loaded
-        if (image.complete) {
-            initCanvas();
-            drawDetections();
-            populateObjectsList();
+        populateObjectsList();
         }
 
         function initCanvas() {
-            const rect = image.getBoundingClientRect();
+            if (!canvas || !image) return;
             canvas.width = image.naturalWidth;
             canvas.height = image.naturalHeight;
             canvas.style.width = image.offsetWidth + 'px';
@@ -1079,86 +1141,46 @@
         }
 
         function drawDetections() {
+            if (!ctx || !canvas) return;
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            
-            const scaleX = canvas.width / image.naturalWidth;
-            const scaleY = canvas.height / image.naturalHeight;
-
-            detectedObjects.forEach((obj, index) => {
-                const color = colors[index % colors.length];
+            detectedObjects.forEach(function (obj, index) {
+                const color = COLORS[index % COLORS.length];
                 const bbox = obj.bounding_box;
+                if (!bbox) return;
 
-                // Draw bounding box
                 if (showBoxes) {
-                    ctx.strokeStyle = color;
-                    ctx.lineWidth = 3;
+                    ctx.strokeStyle = color; ctx.lineWidth = 3;
                     ctx.strokeRect(bbox.x, bbox.y, bbox.width, bbox.height);
-                    
-                    // Corner markers
-                    const cornerSize = 15;
-                    ctx.beginPath();
-                    // Top-left
-                    ctx.moveTo(bbox.x, bbox.y + cornerSize);
-                    ctx.lineTo(bbox.x, bbox.y);
-                    ctx.lineTo(bbox.x + cornerSize, bbox.y);
-                    // Top-right
-                    ctx.moveTo(bbox.x + bbox.width - cornerSize, bbox.y);
-                    ctx.lineTo(bbox.x + bbox.width, bbox.y);
-                    ctx.lineTo(bbox.x + bbox.width, bbox.y + cornerSize);
-                    // Bottom-right
-                    ctx.moveTo(bbox.x + bbox.width, bbox.y + bbox.height - cornerSize);
-                    ctx.lineTo(bbox.x + bbox.width, bbox.y + bbox.height);
-                    ctx.lineTo(bbox.x + bbox.width - cornerSize, bbox.y + bbox.height);
-                    // Bottom-left
-                    ctx.moveTo(bbox.x + cornerSize, bbox.y + bbox.height);
-                    ctx.lineTo(bbox.x, bbox.y + bbox.height);
-                    ctx.lineTo(bbox.x, bbox.y + bbox.height - cornerSize);
+                    // Corner brackets
+                    const cs = 15;
                     ctx.lineWidth = 4;
+                    ctx.beginPath();
+                    ctx.moveTo(bbox.x, bbox.y + cs); ctx.lineTo(bbox.x, bbox.y); ctx.lineTo(bbox.x + cs, bbox.y);
+                    ctx.moveTo(bbox.x + bbox.width - cs, bbox.y); ctx.lineTo(bbox.x + bbox.width, bbox.y); ctx.lineTo(bbox.x + bbox.width, bbox.y + cs);
+                    ctx.moveTo(bbox.x + bbox.width, bbox.y + bbox.height - cs); ctx.lineTo(bbox.x + bbox.width, bbox.y + bbox.height); ctx.lineTo(bbox.x + bbox.width - cs, bbox.y + bbox.height);
+                    ctx.moveTo(bbox.x + cs, bbox.y + bbox.height); ctx.lineTo(bbox.x, bbox.y + bbox.height); ctx.lineTo(bbox.x, bbox.y + bbox.height - cs);
                     ctx.stroke();
                 }
-
-                // Draw center point
-                if (showCenters) {
-                    const cx = obj.center_px[0];
-                    const cy = obj.center_px[1];
-                    
-                    // Crosshair
-                    ctx.strokeStyle = color;
-                    ctx.lineWidth = 2;
+                if (showCenters && obj.center_px) {
+                    const cx = obj.center_px[0], cy = obj.center_px[1];
+                    ctx.strokeStyle = color; ctx.lineWidth = 2;
                     ctx.beginPath();
-                    ctx.moveTo(cx - 10, cy);
-                    ctx.lineTo(cx + 10, cy);
-                    ctx.moveTo(cx, cy - 10);
-                    ctx.lineTo(cx, cy + 10);
+                    ctx.moveTo(cx - 10, cy); ctx.lineTo(cx + 10, cy);
+                    ctx.moveTo(cx, cy - 10); ctx.lineTo(cx, cy + 10);
                     ctx.stroke();
-                    
-                    // Center dot
-                    ctx.fillStyle = color;
-                    ctx.beginPath();
-                    ctx.arc(cx, cy, 5, 0, Math.PI * 2);
-                    ctx.fill();
+                    ctx.fillStyle = color; ctx.beginPath(); ctx.arc(cx, cy, 5, 0, Math.PI * 2); ctx.fill();
                 }
-
-                // Draw label
                 if (showLabels) {
-                    ctx.font = 'bold 14px Orbitron, sans-serif';
-                    const label = `Obj ${index + 1}`;
-                    const labelWidth = ctx.measureText(label).width + 16;
-                    
-                    // Label background
+                    ctx.font = 'bold 14px "Space Grotesk", sans-serif';
+                    const label = 'Obj ' + (index + 1);
+                    const lw = ctx.measureText(label).width + 16;
                     ctx.fillStyle = color;
-                    ctx.fillRect(bbox.x, bbox.y - 25, labelWidth, 22);
-                    
-                    // Label text
-                    ctx.fillStyle = '#050510';
+                    ctx.fillRect(bbox.x, bbox.y - 25, lw, 22);
+                    ctx.fillStyle = '#06070e';
                     ctx.fillText(label, bbox.x + 8, bbox.y - 8);
                 }
-
-                // Draw edges (simplified)
                 if (showEdges) {
-                    ctx.strokeStyle = 'rgba(0, 240, 255, 0.5)';
-                    ctx.lineWidth = 1;
-                    ctx.setLineDash([5, 5]);
+                    ctx.strokeStyle = 'rgba(108,138,255,0.5)'; ctx.lineWidth = 1; ctx.setLineDash([5, 5]);
                     ctx.strokeRect(bbox.x - 5, bbox.y - 5, bbox.width + 10, bbox.height + 10);
                     ctx.setLineDash([]);
                 }
@@ -1166,62 +1188,68 @@
         }
 
         function populateObjectsList() {
-            const listContainer = document.getElementById('objectsList');
-            let html = '<div class="objects-list-header"><i class="fas fa-list"></i> Detected Objects</div>';
-            
-            detectedObjects.forEach((obj, index) => {
-                const color = colors[index % colors.length];
-                const shape = obj.circularity > 0.7 ? 'Circular' : obj.circularity > 0.4 ? 'Rounded' : 'Angular';
-                html += `
-                    <div class="object-item">
-                        <div class="object-color" style="background: ${color};"></div>
-                        <div class="object-name">Object ${index + 1}</div>
-                        <div class="object-details">${obj.bounding_box.width}×${obj.bounding_box.height}px | ${shape}</div>
-                    </div>
-                `;
+            const lc = document.getElementById('objectsList');
+            if (detectedObjects.length === 0) {
+                lc.innerHTML = '<p style="color:var(--clr-text-3);text-align:center;padding:2rem 0"><i class="fas fa-search" style="margin-right:0.5rem"></i>No objects detected</p>';
+                return;
+            }
+            let html = '';
+            detectedObjects.forEach(function (obj, i) {
+                const color = COLORS[i % COLORS.length];
+                const bbox = obj.bounding_box || {};
+                const shape = (obj.circularity || 0) > 0.7 ? 'Circular' : ((obj.circularity || 0) > 0.4 ? 'Rounded' : 'Angular');
+                html += '<div class="object-item"><div class="object-color" style="background:' + color + '"></div><div class="object-name">Object ' + (i + 1) + '</div><div class="object-details">' + (bbox.width || '?') + '×' + (bbox.height || '?') + 'px | ' + shape + '</div></div>';
             });
-            
-            listContainer.innerHTML = html;
+            lc.innerHTML = html;
         }
 
-        function toggleBoundingBoxes() {
-            showBoxes = !showBoxes;
-            document.getElementById('toggleBoxes').classList.toggle('active', showBoxes);
-            drawDetections();
-        }
+        function toggleBoundingBoxes() { showBoxes = !showBoxes; document.getElementById('toggleBoxes').classList.toggle('active', showBoxes); drawDetections(); }
+        function toggleCenters() { showCenters = !showCenters; document.getElementById('toggleCenters').classList.toggle('active', showCenters); drawDetections(); }
+        function toggleLabels() { showLabels = !showLabels; document.getElementById('toggleLabels').classList.toggle('active', showLabels); drawDetections(); }
+        function toggleEdges() { showEdges = !showEdges; document.getElementById('toggleEdges').classList.toggle('active', showEdges); drawDetections(); }
 
-        function toggleCenters() {
-            showCenters = !showCenters;
-            document.getElementById('toggleCenters').classList.toggle('active', showCenters);
-            drawDetections();
-        }
-
-        function toggleLabels() {
-            showLabels = !showLabels;
-            document.getElementById('toggleLabels').classList.toggle('active', showLabels);
-            drawDetections();
-        }
-
-        function toggleEdges() {
-            showEdges = !showEdges;
-            document.getElementById('toggleEdges').classList.toggle('active', showEdges);
-            drawDetections();
-        }
-
-        // Resize handler
-        window.addEventListener('resize', () => {
-            canvas.style.width = image.offsetWidth + 'px';
-            canvas.style.height = image.offsetHeight + 'px';
+        window.addEventListener('resize', function () {
+            if (canvas && image) { canvas.style.width = image.offsetWidth + 'px'; canvas.style.height = image.offsetHeight + 'px'; }
         });
 
-        // Animate vector bars
-        document.querySelectorAll('.vector-bar').forEach((bar, index) => {
-            const value = parseFloat(bar.dataset.value) || 0;
-            const height = Math.abs(value) * 80 + 10; // Scale to 10-90%
-            setTimeout(() => {
-                bar.style.height = height + '%';
-            }, index * 100);
+        /* ======== Vector Bar Animation ======== */
+        document.querySelectorAll('.vector-bar').forEach(function (bar, i) {
+            const v = parseFloat(bar.dataset.value) || 0;
+            const h = Math.min(Math.abs(v) * 80 + 10, 100);
+            setTimeout(function () { bar.style.height = h + '%'; }, 200 + i * 100);
         });
+
+        /* Load detection data on page ready */
+        loadDetectionData();
+
+        /* ======== Diagnostic Logging for rogue requests ======== */
+        (function() {
+            const originalFetch = window.fetch;
+            window.fetch = function() {
+                const url = arguments[0];
+                if (typeof url === 'string' && url.includes('27')) {
+                    console.warn('ROGUE FETCH DETECTED:', url);
+                    console.trace();
+                }
+                return originalFetch.apply(this, arguments);
+            };
+            const originalOpen = XMLHttpRequest.prototype.open;
+            XMLHttpRequest.prototype.open = function() {
+                if (arguments[1] && arguments[1].includes('27')) {
+                    console.warn('ROGUE XHR DETECTED:', arguments[1]);
+                    console.trace();
+                }
+                return originalOpen.apply(this, arguments);
+            };
+            // Check for hidden links/images
+            document.querySelectorAll('a, img, iframe').forEach(el => {
+                const src = el.src || el.href;
+                if (src && src.includes('27')) {
+                    console.warn('ROGUE ELEMENT FOUND:', el);
+                }
+            });
+        })();
     </script>
 </body>
+
 </html>

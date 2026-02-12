@@ -1,254 +1,394 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard | Q-FuseVision AI Lab</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800&family=Exo+2:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         :root {
-            --primary: #00f0ff;
-            --secondary: #bf00ff;
-            --accent: #ff00aa;
-            --success: #00ff88;
-            --warning: #ffaa00;
-            --danger: #ff3366;
-            --dark-bg: #0a0a1a;
-            --darker-bg: #050510;
-            --card-bg: rgba(20, 20, 40, 0.8);
-            --glass-bg: rgba(255, 255, 255, 0.03);
-            --border-glow: rgba(0, 240, 255, 0.3);
-            --text-primary: #ffffff;
-            --text-secondary: rgba(255, 255, 255, 0.7);
-            --text-muted: rgba(255, 255, 255, 0.4);
-            --gradient-primary: linear-gradient(135deg, #00f0ff 0%, #bf00ff 50%, #ff00aa 100%);
-            --glow-primary: 0 0 30px rgba(0, 240, 255, 0.4);
+            --clr-bg-deep: #06070e;
+            --clr-bg: #0b0d1a;
+            --clr-bg-card: rgba(15, 18, 35, 0.75);
+            --clr-bg-glass: rgba(255, 255, 255, 0.04);
+            --clr-border: rgba(99, 130, 255, 0.18);
+            --clr-border-hi: rgba(99, 130, 255, 0.45);
+            --clr-accent: #6c8aff;
+            --clr-accent2: #a855f7;
+            --clr-accent3: #f472b6;
+            --clr-success: #34d399;
+            --clr-warning: #fbbf24;
+            --clr-danger: #f87171;
+            --grad-main: linear-gradient(135deg, #6c8aff 0%, #a855f7 50%, #f472b6 100%);
+            --grad-subtle: linear-gradient(135deg, rgba(108, 138, 255, 0.15), rgba(168, 85, 247, 0.10), rgba(244, 114, 182, 0.08));
+            --clr-text: #eef0ff;
+            --clr-text-2: rgba(238, 240, 255, 0.7);
+            --clr-text-3: rgba(238, 240, 255, 0.4);
+            --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.35), 0 2px 8px rgba(108, 138, 255, 0.08);
+            --shadow-glow: 0 0 40px rgba(108, 138, 255, 0.25);
+            --shadow-btn: 0 4px 20px rgba(108, 138, 255, 0.35);
+            --radius-sm: 8px;
+            --radius-md: 14px;
+            --radius-lg: 22px;
+            --radius-xl: 30px;
+            --ff-body: 'Inter', system-ui, sans-serif;
+            --ff-head: 'Space Grotesk', var(--ff-body);
+            --ff-mono: 'JetBrains Mono', monospace;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box
+        }
+
+        html {
+            scroll-behavior: smooth
+        }
+
         body {
-            font-family: 'Exo 2', sans-serif;
-            background: var(--dark-bg);
-            color: var(--text-primary);
+            font-family: var(--ff-body);
+            background: var(--clr-bg);
+            color: var(--clr-text);
             min-height: 100vh;
+            -webkit-font-smoothing: antialiased
         }
 
-        /* Background */
-        .bg-animation {
+        /* Animated BG */
+        .bg-orbs {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            background: 
-                radial-gradient(ellipse at 20% 20%, rgba(0, 240, 255, 0.08) 0%, transparent 50%),
-                radial-gradient(ellipse at 80% 80%, rgba(191, 0, 255, 0.08) 0%, transparent 50%);
+            inset: 0;
+            z-index: -2;
+            overflow: hidden;
+            pointer-events: none
         }
 
-        .grid-pattern {
+        .bg-mesh {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            inset: 0;
             z-index: -1;
-            background-image: 
-                linear-gradient(rgba(0, 240, 255, 0.02) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 240, 255, 0.02) 1px, transparent 1px);
-            background-size: 50px 50px;
+            background-image: linear-gradient(rgba(108, 138, 255, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(108, 138, 255, 0.03) 1px, transparent 1px);
+            background-size: 60px 60px;
+            mask-image: radial-gradient(ellipse at center, black 30%, transparent 75%);
+            -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 75%);
+            pointer-events: none
         }
 
-        /* Navigation */
+        @keyframes orbFloat0 {
+
+            0%,
+            100% {
+                transform: translate(0, 0) scale(1)
+            }
+
+            50% {
+                transform: translate(60px, -80px) scale(1.15)
+            }
+        }
+
+        @keyframes orbFloat1 {
+
+            0%,
+            100% {
+                transform: translate(0, 0) scale(1)
+            }
+
+            50% {
+                transform: translate(-70px, 50px) scale(0.9)
+            }
+        }
+
+        @keyframes orbFloat2 {
+
+            0%,
+            100% {
+                transform: translate(0, 0) scale(1.05)
+            }
+
+            50% {
+                transform: translate(40px, 70px) scale(0.95)
+            }
+        }
+
+        /* Nav */
         .nav {
-            position: fixed;
+            position: sticky;
             top: 0;
-            left: 0;
-            right: 0;
             z-index: 1000;
             padding: 1rem 2rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: rgba(10, 10, 26, 0.95);
-            -webkit-backdrop-filter: blur(20px);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--border-glow);
+            background: rgba(11, 13, 26, 0.92);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border-bottom: 1px solid var(--clr-border)
         }
 
         .logo {
             display: flex;
             align-items: center;
-            gap: 1rem;
-            text-decoration: none;
+            gap: 0.85rem;
+            text-decoration: none
         }
 
         .logo-icon {
-            width: 45px;
-            height: 45px;
-            background: var(--gradient-primary);
-            border-radius: 10px;
+            width: 42px;
+            height: 42px;
+            background: var(--grad-main);
+            border-radius: 11px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.25rem;
-            box-shadow: var(--glow-primary);
+            font-size: 1.15rem;
+            transition: transform 0.3s;
+            box-shadow: var(--shadow-glow)
+        }
+
+        .logo:hover .logo-icon {
+            transform: rotate(15deg) scale(1.08)
         }
 
         .logo-text {
-            font-family: 'Orbitron', sans-serif;
+            font-family: var(--ff-head);
             font-size: 1.25rem;
             font-weight: 700;
-            background: var(--gradient-primary);
+            background: var(--grad-main);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            background-clip: text;
+            background-clip: text
         }
 
         .nav-links {
             display: flex;
-            gap: 1.5rem;
             align-items: center;
+            gap: 1.5rem
         }
 
         .nav-link {
-            color: var(--text-secondary);
+            color: var(--clr-text-2);
             text-decoration: none;
             font-weight: 500;
             font-size: 0.9rem;
-            transition: color 0.3s ease;
+            transition: color 0.3s;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.4rem
         }
 
-        .nav-link:hover { color: var(--primary); }
+        .nav-link:hover {
+            color: var(--clr-accent)
+        }
 
         .nav-btn {
-            padding: 0.6rem 1.25rem;
-            background: var(--gradient-primary);
+            padding: 0.65rem 1.4rem;
+            background: var(--grad-main);
             border: none;
-            border-radius: 8px;
-            color: var(--darker-bg);
-            font-family: 'Exo 2', sans-serif;
+            border-radius: var(--radius-sm);
+            color: var(--clr-bg-deep);
+            font-family: var(--ff-body);
             font-weight: 600;
-            font-size: 0.9rem;
+            font-size: 0.88rem;
             cursor: pointer;
-            transition: all 0.3s ease;
             text-decoration: none;
-            display: flex;
+            box-shadow: var(--shadow-btn);
+            transition: all 0.3s;
+            display: inline-flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.4rem
         }
 
         .nav-btn:hover {
             transform: translateY(-2px);
-            box-shadow: var(--glow-primary);
+            box-shadow: 0 8px 30px rgba(108, 138, 255, 0.45)
         }
 
-        /* Main Content */
-        .main-content {
-            padding: 100px 2rem 2rem;
-            max-width: 1600px;
+        /* Messages */
+        .messages {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem
+        }
+
+        .message {
+            padding: 0.85rem 1.25rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.88rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            animation: msgSlide 0.4s cubic-bezier(0.23, 1, 0.32, 1)
+        }
+
+        .message.success {
+            background: rgba(52, 211, 153, 0.12);
+            border: 1px solid var(--clr-success);
+            color: var(--clr-success)
+        }
+
+        .message.error {
+            background: rgba(248, 113, 113, 0.12);
+            border: 1px solid var(--clr-danger);
+            color: var(--clr-danger)
+        }
+
+        .message.info {
+            background: rgba(108, 138, 255, 0.12);
+            border: 1px solid var(--clr-accent);
+            color: var(--clr-accent)
+        }
+
+        @keyframes msgSlide {
+            from {
+                opacity: 0;
+                transform: translateX(80px) scale(0.95)
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0) scale(1)
+            }
+        }
+
+        /* Main */
+        .main {
+            max-width: 1400px;
             margin: 0 auto;
+            padding: 2.5rem 2rem 4rem
         }
 
-        /* Page Header */
-        .page-header {
+        /* Welcome Banner */
+        .welcome-banner {
+            background: var(--clr-bg-card);
+            border: 1px solid var(--clr-border);
+            border-radius: var(--radius-xl);
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden
+        }
+
+        .welcome-banner::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--grad-main)
+        }
+
+        .welcome-banner::after {
+            content: '';
+            position: absolute;
+            top: -40%;
+            right: -15%;
+            width: 50%;
+            height: 180%;
+            background: radial-gradient(ellipse, rgba(108, 138, 255, 0.06), transparent 70%);
+            pointer-events: none
+        }
+
+        .welcome-top {
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            margin-bottom: 2.5rem;
             flex-wrap: wrap;
-            gap: 1.5rem;
+            gap: 1rem
         }
 
-        .page-title {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 2.5rem;
+        .welcome-text h1 {
+            font-family: var(--ff-head);
+            font-size: clamp(1.5rem, 3vw, 2rem);
             font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 1rem;
+            margin-bottom: 0.4rem
         }
 
-        .page-title .gradient {
-            background: var(--gradient-primary);
+        .welcome-text h1 .grad {
+            background: var(--grad-main);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            background-clip: text;
+            background-clip: text
         }
 
-        .page-subtitle {
-            color: var(--text-secondary);
-            margin-top: 0.5rem;
-            font-size: 1.1rem;
+        .welcome-text p {
+            color: var(--clr-text-2);
+            font-size: 0.95rem
         }
 
-        .header-actions {
-            display: flex;
-            gap: 1rem;
-            align-items: center;
-        }
-
-        /* Ollama Status */
-        .ollama-status {
+        .welcome-status {
             display: flex;
             align-items: center;
-            gap: 0.75rem;
-            padding: 0.75rem 1.25rem;
-            background: var(--card-bg);
-            border-radius: 12px;
-            border: 1px solid var(--border-glow);
+            gap: 0.6rem;
+            margin-top: 0.75rem
         }
 
         .status-dot {
-            width: 12px;
-            height: 12px;
+            width: 10px;
+            height: 10px;
             border-radius: 50%;
-            animation: pulse-dot 2s infinite;
+            animation: pulse-dot 2s ease-in-out infinite
         }
 
         .status-dot.online {
-            background: var(--success);
-            box-shadow: 0 0 10px var(--success);
+            background: var(--clr-success);
+            box-shadow: 0 0 10px var(--clr-success)
         }
 
         .status-dot.offline {
-            background: var(--danger);
-            box-shadow: 0 0 10px var(--danger);
+            background: var(--clr-danger);
+            box-shadow: 0 0 10px var(--clr-danger)
         }
 
         @keyframes pulse-dot {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.7; transform: scale(1.1); }
+
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1)
+            }
+
+            50% {
+                opacity: 0.6;
+                transform: scale(1.3)
+            }
         }
 
         .status-text {
-            font-size: 0.9rem;
-            color: var(--text-secondary);
+            font-size: 0.82rem;
+            color: var(--clr-text-2)
         }
 
-        /* Stats Grid */
+        /* Stats Row */
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2.5rem;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.25rem;
+            margin-bottom: 2.5rem
         }
 
         .stat-card {
-            background: var(--card-bg);
-            border: 1px solid var(--border-glow);
-            border-radius: 16px;
+            background: var(--clr-bg-card);
+            border: 1px solid var(--clr-border);
+            border-radius: var(--radius-lg);
             padding: 1.75rem;
             position: relative;
             overflow: hidden;
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1)
         }
 
         .stat-card::before {
@@ -258,105 +398,176 @@
             left: 0;
             right: 0;
             height: 3px;
-            background: var(--gradient-primary);
             opacity: 0;
-            transition: opacity 0.3s ease;
+            transition: opacity 0.3s
+        }
+
+        .stat-card:nth-child(1)::before {
+            background: var(--grad-main)
+        }
+
+        .stat-card:nth-child(2)::before {
+            background: linear-gradient(90deg, var(--clr-success), #2dd4bf)
+        }
+
+        .stat-card:nth-child(3)::before {
+            background: linear-gradient(90deg, var(--clr-accent), #818cf8)
+        }
+
+        .stat-card:nth-child(4)::before {
+            background: linear-gradient(90deg, var(--clr-danger), var(--clr-accent3))
         }
 
         .stat-card:hover {
+            border-color: var(--clr-border-hi);
             transform: translateY(-5px);
-            border-color: var(--primary);
+            box-shadow: var(--shadow-card), var(--shadow-glow)
         }
 
-        .stat-card:hover::before { opacity: 1; }
+        .stat-card:hover::before {
+            opacity: 1
+        }
+
+        .stat-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem
+        }
 
         .stat-icon {
-            width: 50px;
-            height: 50px;
-            background: var(--gradient-primary);
+            width: 48px;
+            height: 48px;
+            background: var(--grad-subtle);
+            border: 1px solid var(--clr-border);
             border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.25rem;
-            color: var(--darker-bg);
-            margin-bottom: 1rem;
+            font-size: 1.2rem;
+            color: var(--clr-accent);
+            transition: transform 0.3s, box-shadow 0.3s
         }
 
-        .stat-card.success .stat-icon { background: var(--success); }
-        .stat-card.warning .stat-icon { background: var(--warning); }
-        .stat-card.danger .stat-icon { background: var(--danger); }
-        .stat-card.info .stat-icon { background: var(--primary); }
+        .stat-card:hover .stat-icon {
+            transform: scale(1.1);
+            box-shadow: var(--shadow-glow)
+        }
+
+        .stat-trend {
+            font-size: 0.75rem;
+            color: var(--clr-text-3);
+            font-family: var(--ff-mono)
+        }
 
         .stat-value {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 2.5rem;
+            font-family: var(--ff-head);
+            font-size: 2.2rem;
             font-weight: 700;
-            background: var(--gradient-primary);
+            margin-bottom: 0.3rem;
+            line-height: 1
+        }
+
+        .stat-card:nth-child(1) .stat-value {
+            background: var(--grad-main);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 0.25rem;
+            background-clip: text
+        }
+
+        .stat-card:nth-child(2) .stat-value {
+            color: var(--clr-success)
+        }
+
+        .stat-card:nth-child(3) .stat-value {
+            color: var(--clr-accent)
+        }
+
+        .stat-card:nth-child(4) .stat-value {
+            color: var(--clr-danger)
         }
 
         .stat-label {
-            color: var(--text-secondary);
-            font-size: 0.95rem;
+            color: var(--clr-text-2);
+            font-size: 0.85rem;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 1px
         }
 
         /* Quick Actions */
-        .quick-actions {
+        .actions-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2.5rem;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.25rem;
+            margin-bottom: 2.5rem
         }
 
         .action-card {
-            background: var(--card-bg);
-            border: 1px solid var(--border-glow);
-            border-radius: 16px;
-            padding: 2rem;
             display: flex;
             align-items: center;
-            gap: 1.5rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
+            gap: 1.25rem;
+            padding: 1.5rem;
+            background: var(--clr-bg-card);
+            border: 1px solid var(--clr-border);
+            border-radius: var(--radius-md);
             text-decoration: none;
-            color: inherit;
+            transition: all 0.35s cubic-bezier(0.23, 1, 0.32, 1);
+            position: relative;
+            overflow: hidden
+        }
+
+        .action-card::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(400px circle at var(--mx, 50%) var(--my, 50%), rgba(108, 138, 255, 0.06), transparent 40%);
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none
         }
 
         .action-card:hover {
-            transform: translateY(-5px);
-            border-color: var(--primary);
-            background: rgba(0, 240, 255, 0.05);
+            background: rgba(108, 138, 255, 0.05);
+            border-color: var(--clr-accent);
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-card)
+        }
+
+        .action-card:hover::after {
+            opacity: 1
         }
 
         .action-icon {
-            width: 60px;
-            height: 60px;
-            background: var(--gradient-primary);
+            width: 52px;
+            height: 52px;
+            min-width: 52px;
+            background: var(--grad-subtle);
+            border: 1px solid var(--clr-border);
             border-radius: 14px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.5rem;
-            color: var(--darker-bg);
-            flex-shrink: 0;
+            font-size: 1.25rem;
+            color: var(--clr-accent);
+            transition: transform 0.3s
+        }
+
+        .action-card:hover .action-icon {
+            transform: scale(1.1) rotate(5deg)
         }
 
         .action-content h3 {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1.1rem;
+            font-family: var(--ff-head);
+            font-size: 1rem;
             font-weight: 600;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.3rem;
+            color: var(--clr-text)
         }
 
         .action-content p {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
+            color: var(--clr-text-2);
+            font-size: 0.85rem;
+            line-height: 1.5
         }
 
         /* Section Header */
@@ -364,358 +575,401 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1.75rem;
             flex-wrap: wrap;
-            gap: 1rem;
+            gap: 1rem
         }
 
         .section-title {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1.5rem;
+            font-family: var(--ff-head);
+            font-size: 1.3rem;
             font-weight: 600;
             display: flex;
             align-items: center;
-            gap: 0.75rem;
+            gap: 0.75rem
         }
 
         .section-title i {
-            color: var(--primary);
+            color: var(--clr-accent);
+            font-size: 1.1rem
         }
 
+        /* Filter Tabs */
         .filter-tabs {
             display: flex;
-            gap: 0.5rem;
+            gap: 0.4rem;
+            background: var(--clr-bg-glass);
+            border: 1px solid var(--clr-border);
+            border-radius: var(--radius-sm);
+            padding: 4px
         }
 
         .filter-tab {
-            padding: 0.5rem 1rem;
-            background: var(--glass-bg);
-            border: 1px solid var(--border-glow);
-            border-radius: 8px;
-            color: var(--text-secondary);
-            font-size: 0.85rem;
+            padding: 0.5rem 1.1rem;
+            background: transparent;
+            border: none;
+            border-radius: 6px;
+            color: var(--clr-text-3);
+            font-size: 0.82rem;
+            font-weight: 500;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.3s;
+            font-family: var(--ff-body)
         }
 
-        .filter-tab:hover,
+        .filter-tab:hover {
+            color: var(--clr-text)
+        }
+
         .filter-tab.active {
-            background: rgba(0, 240, 255, 0.1);
-            border-color: var(--primary);
-            color: var(--primary);
+            background: var(--grad-main);
+            color: var(--clr-bg-deep);
+            font-weight: 600;
+            box-shadow: var(--shadow-btn)
         }
 
         /* Experiments Grid */
         .experiments-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 1.5rem
         }
 
         .experiment-card {
-            background: var(--card-bg);
-            border: 1px solid var(--border-glow);
-            border-radius: 16px;
+            background: var(--clr-bg-card);
+            border: 1px solid var(--clr-border);
+            border-radius: var(--radius-lg);
             overflow: hidden;
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1)
         }
 
         .experiment-card:hover {
-            transform: translateY(-5px);
-            border-color: var(--primary);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+            border-color: var(--clr-border-hi);
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-card), var(--shadow-glow)
         }
 
         .experiment-image {
             position: relative;
             height: 200px;
             overflow: hidden;
+            background: linear-gradient(135deg, var(--clr-bg-deep), rgba(108, 138, 255, 0.05))
         }
 
         .experiment-image img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: transform 0.3s ease;
+            transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1)
         }
 
         .experiment-card:hover .experiment-image img {
-            transform: scale(1.05);
+            transform: scale(1.08)
         }
 
         .experiment-status {
             position: absolute;
-            top: 1rem;
-            left: 1rem;
-            padding: 0.4rem 0.8rem;
+            top: 12px;
+            left: 12px;
+            padding: 0.35rem 0.8rem;
             border-radius: 6px;
-            font-size: 0.75rem;
+            font-size: 0.72rem;
             font-weight: 600;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 0.8px;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px)
         }
 
         .experiment-status.completed {
-            background: rgba(0, 255, 136, 0.2);
-            color: var(--success);
-            border: 1px solid var(--success);
+            background: rgba(52, 211, 153, 0.2);
+            color: var(--clr-success);
+            border: 1px solid rgba(52, 211, 153, 0.3)
         }
 
         .experiment-status.processing {
-            background: rgba(255, 170, 0, 0.2);
-            color: var(--warning);
-            border: 1px solid var(--warning);
-            animation: pulse 2s infinite;
-        }
-
-        .experiment-status.failed {
-            background: rgba(255, 51, 102, 0.2);
-            color: var(--danger);
-            border: 1px solid var(--danger);
+            background: rgba(108, 138, 255, 0.2);
+            color: var(--clr-accent);
+            border: 1px solid rgba(108, 138, 255, 0.3)
         }
 
         .experiment-status.pending {
-            background: rgba(0, 240, 255, 0.2);
-            color: var(--primary);
-            border: 1px solid var(--primary);
+            background: rgba(251, 191, 36, 0.2);
+            color: var(--clr-warning);
+            border: 1px solid rgba(251, 191, 36, 0.3)
         }
 
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.6; }
+        .experiment-status.failed {
+            background: rgba(248, 113, 113, 0.2);
+            color: var(--clr-danger);
+            border: 1px solid rgba(248, 113, 113, 0.3)
         }
 
         .experiment-id {
             position: absolute;
-            top: 1rem;
-            right: 1rem;
-            padding: 0.35rem 0.7rem;
-            background: rgba(0, 0, 0, 0.6);
+            top: 12px;
+            right: 12px;
+            padding: 0.3rem 0.7rem;
+            background: rgba(0, 0, 0, 0.55);
             border-radius: 6px;
-            font-family: 'JetBrains Mono', monospace;
             font-size: 0.75rem;
-            color: var(--text-secondary);
+            font-family: var(--ff-mono);
+            color: var(--clr-text-2);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px)
         }
 
         .experiment-content {
-            padding: 1.5rem;
+            padding: 1.5rem
         }
 
         .experiment-question {
-            font-size: 1rem;
-            color: var(--text-primary);
+            font-size: 0.95rem;
+            color: var(--clr-text);
+            line-height: 1.55;
             margin-bottom: 1rem;
-            line-height: 1.5;
             display: -webkit-box;
             -webkit-line-clamp: 2;
-            line-clamp: 2;
             -webkit-box-orient: vertical;
-            overflow: hidden;
+            overflow: hidden
         }
 
         .experiment-meta {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1rem;
-            padding-top: 1rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 1rem
         }
 
         .experiment-date {
+            color: var(--clr-text-3);
+            font-size: 0.82rem;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
-            font-size: 0.85rem;
-            color: var(--text-muted);
+            gap: 0.5rem
         }
 
         .experiment-date i {
-            color: var(--primary);
+            font-size: 0.75rem
         }
 
         .experiment-actions {
             display: flex;
-            gap: 0.5rem;
+            gap: 0.6rem
         }
 
         .exp-btn {
-            padding: 0.5rem 1rem;
-            border-radius: 8px;
-            font-size: 0.8rem;
+            padding: 0.55rem 1rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.82rem;
             font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s ease;
             text-decoration: none;
-            display: flex;
+            display: inline-flex;
             align-items: center;
-            gap: 0.4rem;
+            gap: 0.45rem;
+            transition: all 0.3s;
+            cursor: pointer;
             border: none;
+            font-family: var(--ff-body)
         }
 
         .exp-btn.view {
-            background: rgba(0, 240, 255, 0.1);
-            color: var(--primary);
-            border: 1px solid var(--primary);
+            background: rgba(108, 138, 255, 0.12);
+            color: var(--clr-accent);
+            border: 1px solid rgba(108, 138, 255, 0.25)
         }
 
         .exp-btn.view:hover {
-            background: var(--primary);
-            color: var(--darker-bg);
+            background: rgba(108, 138, 255, 0.2);
+            transform: translateY(-2px)
         }
 
         .exp-btn.delete {
-            background: rgba(255, 51, 102, 0.1);
-            color: var(--danger);
-            border: 1px solid var(--danger);
+            background: rgba(248, 113, 113, 0.1);
+            color: var(--clr-danger);
+            border: 1px solid rgba(248, 113, 113, 0.2)
         }
 
         .exp-btn.delete:hover {
-            background: var(--danger);
-            color: white;
-        }
-
-        /* Empty State */
-        .empty-state {
-            text-align: center;
-            padding: 4rem 2rem;
-            background: var(--card-bg);
-            border: 1px dashed var(--border-glow);
-            border-radius: 20px;
-        }
-
-        .empty-icon {
-            width: 100px;
-            height: 100px;
-            background: var(--gradient-primary);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2.5rem;
-            color: var(--darker-bg);
-            margin: 0 auto 2rem;
-            opacity: 0.8;
-        }
-
-        .empty-title {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1.5rem;
-            margin-bottom: 0.75rem;
-        }
-
-        .empty-desc {
-            color: var(--text-secondary);
-            margin-bottom: 2rem;
-            max-width: 400px;
-            margin-left: auto;
-            margin-right: auto;
+            background: rgba(248, 113, 113, 0.18);
+            transform: translateY(-2px)
         }
 
         /* Pagination */
         .pagination {
             display: flex;
             justify-content: center;
-            align-items: center;
             gap: 0.5rem;
-            margin-top: 2rem;
+            margin-top: 2.5rem
         }
 
         .page-btn {
-            padding: 0.6rem 1rem;
-            background: var(--card-bg);
-            border: 1px solid var(--border-glow);
-            border-radius: 8px;
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-decoration: none;
-        }
-
-        .page-btn:hover,
-        .page-btn.active {
-            background: var(--primary);
-            border-color: var(--primary);
-            color: var(--darker-bg);
-        }
-
-        .page-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        /* Messages */
-        .messages {
-            position: fixed;
-            top: 80px;
-            right: 2rem;
-            z-index: 1001;
-            display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
-        }
-
-        .message {
-            padding: 1rem 1.5rem;
-            border-radius: 12px;
-            font-size: 0.9rem;
+            width: 40px;
+            height: 40px;
             display: flex;
             align-items: center;
-            gap: 0.75rem;
-            animation: slideIn 0.3s ease;
-            max-width: 400px;
+            justify-content: center;
+            background: var(--clr-bg-glass);
+            border: 1px solid var(--clr-border);
+            border-radius: var(--radius-sm);
+            color: var(--clr-text-2);
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: all 0.3s
         }
 
-        @keyframes slideIn {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
+        .page-btn:hover {
+            background: rgba(108, 138, 255, 0.1);
+            border-color: var(--clr-accent);
+            color: var(--clr-accent)
         }
 
-        .message.success {
-            background: rgba(0, 255, 136, 0.15);
-            border: 1px solid var(--success);
-            color: var(--success);
+        .page-btn.active {
+            background: var(--grad-main);
+            color: var(--clr-bg-deep);
+            border-color: transparent;
+            font-weight: 600
         }
 
-        .message.error {
-            background: rgba(255, 51, 102, 0.15);
-            border: 1px solid var(--danger);
-            color: var(--danger);
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 5rem 2rem
         }
 
-        .message.info {
-            background: rgba(0, 240, 255, 0.15);
-            border: 1px solid var(--primary);
-            color: var(--primary);
+        .empty-icon {
+            width: 110px;
+            height: 110px;
+            margin: 0 auto 2rem;
+            background: var(--grad-subtle);
+            border: 2px solid var(--clr-border);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.8rem;
+            color: var(--clr-accent);
+            animation: float 4s ease-in-out infinite
         }
 
-        /* Responsive */
-        @media (max-width: 768px) {
-            .nav { padding: 0.75rem 1rem; }
-            .nav-links { display: none; }
-            .main-content { padding: 80px 1rem 1rem; }
-            .page-title { font-size: 1.75rem; }
-            .page-header { flex-direction: column; }
-            .experiments-grid { grid-template-columns: 1fr; }
-            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0)
+            }
+
+            50% {
+                transform: translateY(-10px)
+            }
         }
 
-        /* Scrollbar */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: var(--darker-bg); }
+        .empty-title {
+            font-family: var(--ff-head);
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem
+        }
+
+        .empty-desc {
+            color: var(--clr-text-2);
+            max-width: 420px;
+            margin: 0 auto 2rem;
+            line-height: 1.65
+        }
+
+        /* Reveal */
+        .reveal {
+            opacity: 0;
+            transform: translateY(25px);
+            transition: opacity 0.6s cubic-bezier(0.23, 1, 0.32, 1), transform 0.6s cubic-bezier(0.23, 1, 0.32, 1)
+        }
+
+        .reveal.revealed {
+            opacity: 1;
+            transform: translateY(0)
+        }
+
+        @media(max-width:1024px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr)
+            }
+
+            .actions-grid {
+                grid-template-columns: 1fr
+            }
+        }
+
+        @media(max-width:768px) {
+            .nav {
+                padding: 0.75rem 1rem
+            }
+
+            .nav-links {
+                gap: 1rem
+            }
+
+            .main {
+                padding: 1.5rem 1rem 3rem
+            }
+
+            .welcome-banner {
+                padding: 1.75rem
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.75rem
+            }
+
+            .experiments-grid {
+                grid-template-columns: 1fr
+            }
+
+            .filter-tabs {
+                flex-wrap: wrap
+            }
+        }
+
+        @media(max-width:480px) {
+            .stats-grid {
+                grid-template-columns: 1fr
+            }
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--clr-bg-deep)
+        }
+
         ::-webkit-scrollbar-thumb {
-            background: var(--gradient-primary);
-            border-radius: 4px;
+            background: linear-gradient(180deg, var(--clr-accent), var(--clr-accent2));
+            border-radius: 4px
+        }
+
+        ::selection {
+            background: rgba(108, 138, 255, 0.3);
+            color: var(--clr-text)
         }
     </style>
 </head>
-<body>
-    <div class="bg-animation"></div>
-    <div class="grid-pattern"></div>
 
-    <!-- Navigation -->
+<body>
+    <div class="bg-orbs" id="bgOrbs"></div>
+    <div class="bg-mesh"></div>
+
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+        <div class="message {{ message.tags }}">
+            <i
+                class="fas {% if message.tags == 'success' %}fa-check-circle{% elif message.tags == 'error' %}fa-exclamation-circle{% else %}fa-info-circle{% endif %}"></i>
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
     <nav class="nav">
         <a href="{% url 'landing' %}" class="logo">
             <div class="logo-icon"><i class="fas fa-atom"></i></div>
@@ -723,88 +977,85 @@
         </a>
         <div class="nav-links">
             <a href="{% url 'landing' %}" class="nav-link"><i class="fas fa-home"></i> Home</a>
-            <a href="{% url 'dashboard' %}" class="nav-link"><i class="fas fa-chart-line"></i> Dashboard</a>
-            <a href="{% url 'upload' %}" class="nav-btn"><i class="fas fa-plus"></i> New Experiment</a>
-            {% if user.is_authenticated %}
-                <a href="{% url 'logout' %}" class="nav-link"><i class="fas fa-sign-out-alt"></i> Logout</a>
-            {% endif %}
+            <a href="{% url 'upload' %}" class="nav-link"><i class="fas fa-flask"></i> New Experiment</a>
+            <a href="{% url 'logout' %}" class="nav-btn"><i class="fas fa-sign-out-alt"></i> Logout</a>
         </div>
     </nav>
 
-    <!-- Messages -->
-    {% if messages %}
-    <div class="messages">
-        {% for message in messages %}
-        <div class="message {{ message.tags }}">
-            <i class="fas {% if message.tags == 'success' %}fa-check-circle{% elif message.tags == 'error' %}fa-exclamation-circle{% else %}fa-info-circle{% endif %}"></i>
-            {{ message }}
-        </div>
-        {% endfor %}
-    </div>
-    {% endif %}
-
-    <!-- Main Content -->
-    <div class="main-content">
-        <!-- Page Header -->
-        <div class="page-header">
-            <div>
-                <h1 class="page-title">
-                    <i class="fas fa-chart-line" style="color: var(--primary);"></i>
-                    <span class="gradient">Dashboard</span>
-                </h1>
-                <p class="page-subtitle">Monitor your quantum vision experiments and analytics</p>
-            </div>
-            <div class="header-actions">
-                <div class="ollama-status">
-                    <div class="status-dot {% if ollama_available %}online{% else %}offline{% endif %}"></div>
-                    <span class="status-text">
-                        {% if ollama_available %}Ollama Online{% else %}Ollama Offline{% endif %}
-                    </span>
+    <div class="main">
+        <!-- Welcome Banner -->
+        <div class="welcome-banner reveal">
+            <div class="welcome-top">
+                <div class="welcome-text">
+                    <h1>Welcome back, <span class="grad">{{ user.username }}</span></h1>
+                    <p>Manage and explore your quantum vision experiments</p>
+                    <div class="welcome-status">
+                        <span class="status-dot {% if ollama_available %}online{% else %}offline{% endif %}"></span>
+                        <span class="status-text">
+                            {% if ollama_available %}Ollama AI is online{% else %}Ollama AI is offline — {{
+                            ollama_message }}{% endif %}
+                        </span>
+                    </div>
                 </div>
+                <a href="{% url 'upload' %}" class="nav-btn" style="padding:0.8rem 1.6rem;font-size:0.92rem">
+                    <i class="fas fa-plus"></i> New Experiment
+                </a>
             </div>
         </div>
 
-        <!-- Stats Grid -->
+        <!-- Stats -->
         <div class="stats-grid">
-            <div class="stat-card info">
-                <div class="stat-icon"><i class="fas fa-flask"></i></div>
+            <div class="stat-card reveal">
+                <div class="stat-top">
+                    <div class="stat-icon"><i class="fas fa-flask"></i></div>
+                    <span class="stat-trend">all time</span>
+                </div>
                 <div class="stat-value">{{ stats.total|default:"0" }}</div>
                 <div class="stat-label">Total Experiments</div>
             </div>
-            <div class="stat-card success">
-                <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
+            <div class="stat-card reveal">
+                <div class="stat-top">
+                    <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
+                    <span class="stat-trend">success</span>
+                </div>
                 <div class="stat-value">{{ stats.completed|default:"0" }}</div>
                 <div class="stat-label">Completed</div>
             </div>
-            <div class="stat-card warning">
-                <div class="stat-icon"><i class="fas fa-spinner"></i></div>
+            <div class="stat-card reveal">
+                <div class="stat-top">
+                    <div class="stat-icon"><i class="fas fa-spinner"></i></div>
+                    <span class="stat-trend">active</span>
+                </div>
                 <div class="stat-value">{{ stats.processing|default:"0" }}</div>
                 <div class="stat-label">Processing</div>
             </div>
-            <div class="stat-card danger">
-                <div class="stat-icon"><i class="fas fa-times-circle"></i></div>
+            <div class="stat-card reveal">
+                <div class="stat-top">
+                    <div class="stat-icon"><i class="fas fa-exclamation-circle"></i></div>
+                    <span class="stat-trend">errors</span>
+                </div>
                 <div class="stat-value">{{ stats.failed|default:"0" }}</div>
                 <div class="stat-label">Failed</div>
             </div>
         </div>
 
         <!-- Quick Actions -->
-        <div class="quick-actions">
-            <a href="{% url 'upload' %}" class="action-card">
-                <div class="action-icon"><i class="fas fa-rocket"></i></div>
+        <div class="actions-grid">
+            <a href="{% url 'upload' %}" class="action-card reveal">
+                <div class="action-icon"><i class="fas fa-plus-circle"></i></div>
                 <div class="action-content">
-                    <h3>New Experiment</h3>
-                    <p>Upload an image and ask a question for quantum analysis</p>
+                    <h3>Create Experiment</h3>
+                    <p>Upload an image and run quantum-enhanced analysis</p>
                 </div>
             </a>
-            <a href="{% url 'landing' %}#features" class="action-card">
+            <a href="{% url 'landing' %}#features" class="action-card reveal">
                 <div class="action-icon"><i class="fas fa-atom"></i></div>
                 <div class="action-content">
                     <h3>Learn About Quantum</h3>
                     <p>Explore quantum fusion technology and capabilities</p>
                 </div>
             </a>
-            <a href="{% url 'landing' %}#capabilities" class="action-card">
+            <a href="{% url 'landing' %}#capabilities" class="action-card reveal">
                 <div class="action-icon"><i class="fas fa-draw-polygon"></i></div>
                 <div class="action-content">
                     <h3>Object Detection</h3>
@@ -815,10 +1066,7 @@
 
         <!-- Experiments Section -->
         <div class="section-header">
-            <h2 class="section-title">
-                <i class="fas fa-history"></i>
-                Recent Experiments
-            </h2>
+            <h2 class="section-title"><i class="fas fa-history"></i> Recent Experiments</h2>
             <div class="filter-tabs">
                 <button class="filter-tab active" data-filter="all">All</button>
                 <button class="filter-tab" data-filter="completed">Completed</button>
@@ -830,13 +1078,14 @@
         {% if experiments %}
         <div class="experiments-grid">
             {% for exp in experiments %}
-            <div class="experiment-card" data-status="{{ exp.status }}">
+            <div class="experiment-card reveal" data-status="{{ exp.status }}">
                 <div class="experiment-image">
                     {% if exp.image %}
                     <img src="{{ exp.image.url }}" alt="Experiment Image" loading="lazy">
                     {% else %}
-                    <div style="background: var(--gradient-primary); height: 100%; display: flex; align-items: center; justify-content: center;">
-                        <i class="fas fa-image" style="font-size: 3rem; color: var(--darker-bg);"></i>
+                    <div
+                        style="background:var(--grad-subtle);height:100%;display:flex;align-items:center;justify-content:center">
+                        <i class="fas fa-image" style="font-size:2.5rem;color:var(--clr-accent);opacity:0.5"></i>
                     </div>
                     {% endif %}
                     <div class="experiment-status {{ exp.status }}">{{ exp.status }}</div>
@@ -854,9 +1103,10 @@
                         <a href="{% url 'results' exp.pk %}" class="exp-btn view">
                             <i class="fas fa-eye"></i> View Results
                         </a>
-                        <form action="{% url 'delete_experiment' exp.pk %}" method="post" style="display: inline;">
+                        <form action="{% url 'delete_experiment' exp.pk %}" method="post" style="display:inline">
                             {% csrf_token %}
-                            <button type="submit" class="exp-btn delete" onclick="return confirm('Delete this experiment?');">
+                            <button type="submit" class="exp-btn delete"
+                                onclick="return confirm('Delete this experiment?');">
                                 <i class="fas fa-trash"></i>
                             </button>
                         </form>
@@ -866,39 +1116,33 @@
             {% endfor %}
         </div>
 
-        <!-- Pagination -->
         {% if experiments.has_other_pages %}
         <div class="pagination">
             {% if experiments.has_previous %}
-            <a href="?page={{ experiments.previous_page_number }}" class="page-btn">
-                <i class="fas fa-chevron-left"></i>
-            </a>
+            <a href="?page={{ experiments.previous_page_number }}" class="page-btn"><i
+                    class="fas fa-chevron-left"></i></a>
             {% endif %}
-            
             {% for num in experiments.paginator.page_range %}
-                {% if experiments.number == num %}
-                <span class="page-btn active">{{ num }}</span>
-                {% elif num > experiments.number|add:'-3' and num < experiments.number|add:'3' %}
-                <a href="?page={{ num }}" class="page-btn">{{ num }}</a>
+            {% if experiments.number == num %}
+            <span class="page-btn active">{{ num }}</span>
+            {% elif num > experiments.number|add:'-3' and num < experiments.number|add:'3' %} <a href="?page={{ num }}"
+                class="page-btn">{{ num }}</a>
                 {% endif %}
-            {% endfor %}
-            
-            {% if experiments.has_next %}
-            <a href="?page={{ experiments.next_page_number }}" class="page-btn">
-                <i class="fas fa-chevron-right"></i>
-            </a>
-            {% endif %}
+                {% endfor %}
+                {% if experiments.has_next %}
+                <a href="?page={{ experiments.next_page_number }}" class="page-btn"><i
+                        class="fas fa-chevron-right"></i></a>
+                {% endif %}
         </div>
         {% endif %}
-        
+
         {% else %}
         <div class="empty-state">
-            <div class="empty-icon">
-                <i class="fas fa-flask"></i>
-            </div>
+            <div class="empty-icon"><i class="fas fa-flask"></i></div>
             <h3 class="empty-title">No Experiments Yet</h3>
-            <p class="empty-desc">Start your first quantum vision experiment by uploading an image and asking a question.</p>
-            <a href="{% url 'upload' %}" class="nav-btn">
+            <p class="empty-desc">Start your first quantum vision experiment by uploading an image and asking a question
+                about it.</p>
+            <a href="{% url 'upload' %}" class="nav-btn" style="padding:0.85rem 2rem;font-size:0.95rem">
                 <i class="fas fa-plus"></i> Create First Experiment
             </a>
         </div>
@@ -906,31 +1150,49 @@
     </div>
 
     <script>
-        // Filter experiments
+        // Orbs
+        (function () {
+            const c = document.getElementById('bgOrbs');
+            const cols = ['rgba(108,138,255,0.1)', 'rgba(168,85,247,0.08)', 'rgba(244,114,182,0.06)', 'rgba(52,211,153,0.05)'];
+            for (let i = 0; i < 5; i++) {
+                const o = document.createElement('div'); const s = 100 + Math.random() * 280;
+                o.style.cssText = `position:absolute;width:${s}px;height:${s}px;border-radius:50%;background:${cols[i % cols.length]};filter:blur(${50 + Math.random() * 40}px);left:${Math.random() * 100}%;top:${Math.random() * 100}%;animation:orbFloat${i % 3} ${20 + Math.random() * 15}s ease-in-out infinite;animation-delay:${-Math.random() * 10}s;pointer-events:none`;
+                c.appendChild(o)
+            }
+        })();
+
+        // Filter
         document.querySelectorAll('.filter-tab').forEach(tab => {
             tab.addEventListener('click', () => {
                 document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
                 tab.classList.add('active');
-                
-                const filter = tab.dataset.filter;
+                const f = tab.dataset.filter;
                 document.querySelectorAll('.experiment-card').forEach(card => {
-                    if (filter === 'all' || card.dataset.status === filter) {
-                        card.style.display = 'block';
-                    } else {
-                        card.style.display = 'none';
-                    }
+                    card.style.display = (f === 'all' || card.dataset.status === f) ? 'block' : 'none';
                 });
             });
         });
 
-        // Auto-hide messages
-        setTimeout(() => {
-            document.querySelectorAll('.message').forEach(msg => {
-                msg.style.opacity = '0';
-                msg.style.transform = 'translateX(100%)';
-                setTimeout(() => msg.remove(), 300);
+        // Reveal
+        (function () {
+            const obs = new IntersectionObserver(entries => {
+                entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('revealed'); obs.unobserve(entry.target) } });
+            }, { threshold: 0.05, rootMargin: '0px 0px -20px 0px' });
+            document.querySelectorAll('.reveal').forEach((el, i) => { el.style.transitionDelay = `${i * 0.04}s`; obs.observe(el) });
+        })();
+
+        // Mouse glow on action cards
+        document.querySelectorAll('.action-card').forEach(card => {
+            card.addEventListener('mousemove', e => {
+                const r = card.getBoundingClientRect();
+                card.style.setProperty('--mx', ((e.clientX - r.left) / r.width * 100) + '%');
+                card.style.setProperty('--my', ((e.clientY - r.top) / r.height * 100) + '%');
             });
-        }, 5000);
+        });
+
+        // Auto-hide messages
+        setTimeout(() => { document.querySelectorAll('.message').forEach(msg => { msg.style.opacity = '0'; msg.style.transform = 'translateX(80px)'; setTimeout(() => msg.remove(), 400) }) }, 5000);
     </script>
 </body>
+
 </html>

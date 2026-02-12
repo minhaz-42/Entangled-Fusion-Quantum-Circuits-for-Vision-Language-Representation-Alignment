@@ -1,55 +1,138 @@
 /**
- * Q-FuseVision AI Lab - Main JavaScript
- * Handles UI interactions and API calls
+ * Q-FuseVision AI Lab — Main JavaScript v2
+ * 3D effects, micro-animations, and UI interactions
  */
 
-// Auto-hide messages after 5 seconds
-document.addEventListener('DOMContentLoaded', function() {
-    const messages = document.querySelectorAll('.message');
-    messages.forEach(message => {
+/* ═══════════════  AUTO-HIDE MESSAGES  ═══════════════ */
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.message').forEach(msg => {
         setTimeout(() => {
-            message.style.opacity = '0';
-            message.style.transform = 'translateX(100px)';
-            setTimeout(() => message.remove(), 300);
+            msg.style.opacity = '0';
+            msg.style.transform = 'translateX(80px) scale(0.95)';
+            setTimeout(() => msg.remove(), 400);
         }, 5000);
     });
 });
 
-// Navbar scroll effect
-window.addEventListener('scroll', function() {
-    const navbar = document.querySelector('.navbar');
-    if (navbar) {
-        if (window.scrollY > 50) {
-            navbar.classList.add('scrolled');
-        } else {
-            navbar.classList.remove('scrolled');
-        }
-    }
+/* ═══════════════  NAVBAR SCROLL  ═══════════════ */
+window.addEventListener('scroll', () => {
+    const nav = document.querySelector('.nav');
+    if (nav) nav.classList.toggle('scrolled', window.scrollY > 50);
 });
 
-// Intersection Observer for animations
-const observeElements = () => {
+/* ═══════════════  3D TILT EFFECT  ═══════════════ */
+function initTiltCards() {
+    document.querySelectorAll('[data-tilt]').forEach(card => {
+        const intensity = parseFloat(card.dataset.tilt) || 8;
+
+        card.addEventListener('mousemove', e => {
+            const rect = card.getBoundingClientRect();
+            const x = (e.clientX - rect.left) / rect.width - 0.5;
+            const y = (e.clientY - rect.top) / rect.height - 0.5;
+
+            card.style.transform =
+                `perspective(${getComputedStyle(document.documentElement).getPropertyValue('--perspective').trim() || '1200px'}) ` +
+                `rotateY(${x * intensity}deg) ` +
+                `rotateX(${-y * intensity}deg) ` +
+                `scale3d(1.02, 1.02, 1.02)`;
+        });
+
+        card.addEventListener('mouseleave', () => {
+            card.style.transform =
+                'perspective(1200px) rotateY(0deg) rotateX(0deg) scale3d(1, 1, 1)';
+        });
+    });
+}
+
+document.addEventListener('DOMContentLoaded', initTiltCards);
+
+/* ═══════════════  STAGGERED ENTRANCE  ═══════════════ */
+function initScrollReveal() {
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
-                entry.target.classList.add('visible');
+                entry.target.classList.add('revealed');
+                observer.unobserve(entry.target);
             }
         });
-    }, { threshold: 0.1 });
+    }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
 
-    document.querySelectorAll('.animate-on-scroll').forEach(el => {
+    document.querySelectorAll('.reveal').forEach((el, i) => {
+        el.style.transitionDelay = `${i * 0.07}s`;
         observer.observe(el);
     });
-};
-
-document.addEventListener('DOMContentLoaded', observeElements);
-
-// Format numbers with commas
-function formatNumber(num) {
-    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
-// Copy to clipboard
+document.addEventListener('DOMContentLoaded', initScrollReveal);
+
+/* ═══════════════  FLOATING 3D ORBS  ═══════════════ */
+function createOrbs(container, count = 6) {
+    const colors = [
+        'rgba(108, 138, 255, 0.12)',
+        'rgba(168, 85, 247, 0.10)',
+        'rgba(244, 114, 182, 0.08)',
+        'rgba(52, 211, 153, 0.07)',
+    ];
+
+    for (let i = 0; i < count; i++) {
+        const orb = document.createElement('div');
+        orb.className = 'floating-orb';
+        const size = 120 + Math.random() * 300;
+        orb.style.cssText = `
+            position: absolute;
+            width: ${size}px;
+            height: ${size}px;
+            border-radius: 50%;
+            background: ${colors[i % colors.length]};
+            filter: blur(${40 + Math.random() * 40}px);
+            left: ${Math.random() * 100}%;
+            top: ${Math.random() * 100}%;
+            animation: orbFloat${i % 3} ${18 + Math.random() * 15}s ease-in-out infinite;
+            animation-delay: ${-Math.random() * 10}s;
+            pointer-events: none;
+        `;
+        container.appendChild(orb);
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const bg = document.querySelector('.bg-orbs');
+    if (bg) createOrbs(bg, 6);
+});
+
+/* ═══════════════  TOAST SYSTEM  ═══════════════ */
+function showToast(message, type = 'info') {
+    let container = document.querySelector('.messages');
+    if (!container) {
+        container = document.createElement('div');
+        container.className = 'messages';
+        document.body.appendChild(container);
+    }
+
+    const icons = {
+        success: 'fa-check-circle',
+        error:   'fa-exclamation-circle',
+        warning: 'fa-exclamation-triangle',
+        info:    'fa-info-circle',
+    };
+
+    const toast = document.createElement('div');
+    toast.className = `message ${type}`;
+    toast.innerHTML = `<i class="fas ${icons[type] || icons.info}"></i>${message}`;
+    container.appendChild(toast);
+
+    setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateX(80px) scale(0.95)';
+        setTimeout(() => toast.remove(), 400);
+    }, 3500);
+}
+
+/* ═══════════════  HELPERS  ═══════════════ */
+function formatNumber(num) {
+    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+}
+
 function copyToClipboard(text) {
     navigator.clipboard.writeText(text).then(() => {
         showToast('Copied to clipboard!', 'success');
@@ -58,128 +141,37 @@ function copyToClipboard(text) {
     });
 }
 
-// Toast notifications
-function showToast(message, type = 'info') {
-    const container = document.querySelector('.messages') || createToastContainer();
-    
-    const toast = document.createElement('div');
-    toast.className = `message ${type}`;
-    toast.innerHTML = `
-        <i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle'}"></i>
-        ${message}
-    `;
-    
-    container.appendChild(toast);
-    
-    setTimeout(() => {
-        toast.style.opacity = '0';
-        toast.style.transform = 'translateX(100px)';
-        setTimeout(() => toast.remove(), 300);
-    }, 3000);
-}
-
-function createToastContainer() {
-    const container = document.createElement('div');
-    container.className = 'messages';
-    document.body.appendChild(container);
-    return container;
-}
-
-// API helper
 async function apiCall(url, options = {}) {
-    try {
-        const response = await fetch(url, {
-            headers: {
-                'Content-Type': 'application/json',
-                ...options.headers,
-            },
-            ...options,
-        });
-        
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        
-        return await response.json();
-    } catch (error) {
-        console.error('API call failed:', error);
-        throw error;
-    }
+    const response = await fetch(url, {
+        headers: { 'Content-Type': 'application/json', ...options.headers },
+        ...options,
+    });
+    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+    return response.json();
 }
 
-// Check experiment status
 async function checkExperimentStatus(experimentId, callback) {
-    try {
-        const data = await apiCall(`/api/status/${experimentId}/`);
-        callback(data);
-    } catch (error) {
-        console.error('Failed to check status:', error);
-    }
+    try { callback(await apiCall(`/api/status/${experimentId}/`)); }
+    catch (e) { console.error('Status check failed:', e); }
 }
 
-// Check Ollama status
 async function checkOllamaStatus(callback) {
-    try {
-        const data = await apiCall('/api/ollama/');
-        callback(data);
-    } catch (error) {
-        console.error('Failed to check Ollama status:', error);
-    }
+    try { callback(await apiCall('/api/ollama/')); }
+    catch (e) { console.error('Ollama check failed:', e); }
 }
 
-// Particle animation
-function createParticles(container, count = 50) {
-    for (let i = 0; i < count; i++) {
-        const particle = document.createElement('div');
-        particle.className = 'particle';
-        particle.style.cssText = `
-            left: ${Math.random() * 100}%;
-            top: ${Math.random() * 100}%;
-            animation-delay: ${Math.random() * 20}s;
-            animation-duration: ${15 + Math.random() * 20}s;
-        `;
-        container.appendChild(particle);
-    }
-}
-
-// Initialize particles on pages with particle containers
-document.addEventListener('DOMContentLoaded', function() {
-    const particleContainer = document.querySelector('.particle-container');
-    if (particleContainer) {
-        createParticles(particleContainer, 50);
-    }
-});
-
-// Smooth scroll to element
 function scrollToElement(selector) {
-    const element = document.querySelector(selector);
-    if (element) {
-        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
+    document.querySelector(selector)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
-// Debounce function
 function debounce(func, wait) {
-    let timeout;
-    return function executedFunction(...args) {
-        const later = () => {
-            clearTimeout(timeout);
-            func(...args);
-        };
-        clearTimeout(timeout);
-        timeout = setTimeout(later, wait);
-    };
+    let t;
+    return (...args) => { clearTimeout(t); t = setTimeout(() => func(...args), wait); };
 }
 
-// Export functions for global use
+/* ═══════════════  GLOBAL EXPORT  ═══════════════ */
 window.QFuseVision = {
-    formatNumber,
-    copyToClipboard,
-    showToast,
-    apiCall,
-    checkExperimentStatus,
-    checkOllamaStatus,
-    createParticles,
-    scrollToElement,
-    debounce,
+    formatNumber, copyToClipboard, showToast, apiCall,
+    checkExperimentStatus, checkOllamaStatus, createOrbs,
+    scrollToElement, debounce, initTiltCards, initScrollReveal,
 };
